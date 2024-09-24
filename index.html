@@ -73,8 +73,8 @@
     <div class="container">
         <h2>Login</h2>
         <input type="email" id="email" placeholder="Email" required>
-        <input type="number" id="otp" placeholder="OTP">
-        <button id="requestOtp">Request OTP</button>
+        <input type="text" id="otp" placeholder="One Time Password">
+        <button id="requestOtp">Request One Time Password (OTP)</button>
         <button id="login">Login</button>
     </div>
 
@@ -86,6 +86,11 @@
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
 
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+
         // Request OTP
         requestOtpBtn.addEventListener('click', async () => {
             const email = document.getElementById('email').value;
@@ -93,10 +98,13 @@
             //otpField.removeAttribute('required');  // Remove required attribute
 
             if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+            if (!validateEmail(email.value)) {
                 alert('Please enter a valid email');
                 return;
             }
-
             try {
                 const response = await fetch(sendOtpUrl, {
                     method: 'POST',
