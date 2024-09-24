@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;  /* Sets a max width to avoid stretching too wide on desktops */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .container button:hover {
+            background-color: #45a049;
+        }
+
+        /* Media query for screens smaller than 600px (typical mobile screens) */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .container input,
+            .container button {
+                font-size: 14px;  /* Slightly smaller font for mobile */
+                padding: 10px;     /* More comfortable button size for mobile */
+            }
+        }
+
+        /* Media query for larger screens (desktops) */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 30px;
+            }
+            .container input,
+            .container button {
+                font-size: 18px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="number" id="otp" placeholder="OTP">
+        <button id="requestOtp">Request OTP</button>
+        <button id="login">Login</button>
+    </div>
+
+    <script>
+        // Update API endpoints
+        const sendOtpUrl = 'http://localhost:3000/sendOTP';
+        const verifyOtpUrl = 'http://localhost:3000/verifyOTP';
+        const requestOtpBtn = document.getElementById('requestOtp');
+        const loginBtn = document.getElementById('login');
+        const otpField = document.getElementById('otp');
+
+        // Request OTP
+        requestOtpBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            otpField.value = '';  // Clear the OTP field when requesting a new OTP
+            //otpField.removeAttribute('required');  // Remove required attribute
+
+            if (!email) {
+                alert('Please enter a valid email');
+                return;
+            }
+
+            try {
+                const response = await fetch(sendOtpUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                if (response.ok) {
+                    alert('OTP sent to your email');
+                } else {
+                    alert('Failed to send OTP');
+                }
+            } catch (error) {
+                console.error('Error requesting OTP:', error);
+            }
+        });
+
+        // Login with OTP
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const otp = otpField.value;
+            
+            otpField.setAttribute('required', 'true');  // Add required attribute on login
+
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            if (!otp) {
+                alert('Please enter the OTP');
+                return;
+            }
+
+            try {
+                const response = await fetch(verifyOtpUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, otp }),
+                });
+
+                if (response.ok) {
+                    alert('Login successful');
+                } else {
+                    alert('Invalid OTP');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+            }
+        });
+    </script>
+</body>
+</html>
