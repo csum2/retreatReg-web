@@ -16,53 +16,16 @@
     </div>
 
     <script>
+        // Update API endpoints
         const sendOtpUrl = 'http://localhost:3000/sendOTP';
         const verifyOtpUrl = 'http://localhost:3000/verifyOTP';
         const requestOtpBtn = document.getElementById('requestOtp');
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
-        let countdownInterval;
 
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailPattern.test(email);
-        }
-
-        function startCountdown(seconds) {
-            const currentTime = Math.floor(Date.now() / 1000);
-            const endTime = currentTime + seconds;
-            localStorage.setItem('otpCountdown', endTime);
-
-            updateButtonText(`Wait ${seconds}s`);
-            countdownInterval = setInterval(() => {
-                const remainingTime = localStorage.getItem('otpCountdown') - Math.floor(Date.now() / 1000);
-                if (remainingTime > 0) {
-                    updateButtonText(`Wait ${remainingTime}s`);
-                } else {
-                    clearInterval(countdownInterval);
-                    localStorage.removeItem('otpCountdown');  // Clear countdown after it ends
-                    updateButtonText('Request One Time Password (OTP)');
-                    requestOtpBtn.disabled = false;
-                }
-            }, 1000);
-        }
-
-        function updateButtonText(text) {
-            requestOtpBtn.textContent = text;
-        }
-
-        // Function to restore countdown after page reload
-        function restoreCountdown() {
-            const savedEndTime = localStorage.getItem('otpCountdown');
-            if (savedEndTime) {
-                const remainingTime = savedEndTime - Math.floor(Date.now() / 1000);
-                if (remainingTime > 0) {
-                    requestOtpBtn.disabled = true;
-                    startCountdown(remainingTime);  // Resume countdown from where it left off
-                } else {
-                    localStorage.removeItem('otpCountdown');  // Clear if expired
-                }
-            }
         }
 
         // Request OTP
@@ -79,9 +42,8 @@
                 return;
             }
 
-            // Disable the button immediately after click
-            requestOtpBtn.disabled = true;
-            updateButtonText('Processing...');
+            // Disable the button right away for 60 seconds
+            disableRequestButton(60);
 
             try {
                 const response = await fetch(sendOtpUrl, {
@@ -94,16 +56,13 @@
 
                 if (response.ok) {
                     alert('OTP sent to your email');
-                    startCountdown(60);  // Start the 60-second countdown after successful request
                 } else {
                     alert('Failed to send OTP');
-                    requestOtpBtn.disabled = false;  // Re-enable button on error
-                    updateButtonText('Request One Time Password (OTP)');
+                    enableRequestButton();  // Re-enable the button in case of failure
                 }
             } catch (error) {
                 console.error('Error requesting OTP:', error);
-                requestOtpBtn.disabled = false;  // Re-enable button on error
-                updateButtonText('Request One Time Password (OTP)');
+                enableRequestButton();  // Re-enable the button in case of failure
             }
         });
 
@@ -111,6 +70,8 @@
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             const otp = otpField.value;
+            
+            otpField.setAttribute('required', 'true');  // Add required attribute on login
 
             if (!email) {
                 alert('Please enter your email');
@@ -141,9 +102,42 @@
             }
         });
 
-        // Restore countdown if page is refreshed
-        window.onload = restoreCountdown;
+        // Disable the request button and show countdown
+        function disableRequestButton(seconds) {
+            requestOtpBtn.disabled = true;
+            let countdown = seconds;
+            requestOtpBtn.innerText = `Request again in ${countdown} seconds`;
 
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                requestOtpBtn.innerText = `Request again in ${countdown} seconds`;
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    enableRequestButton();
+                }
+            }, 1000);
+        }
+
+        // Enable the request button
+        function enableRequestButton() {
+            requestOtpBtn.disabled = false;
+            requestOtpBtn.innerText = 'Request One Time Password (OTP)';
+        }
+
+        // Disable right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
+               (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>

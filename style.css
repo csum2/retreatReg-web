@@ -7,6 +7,7 @@ body {
     margin: 0;
     background-color: #f4f4f4;
 }
+
 .container {
     width: 100%;
     max-width: 400px;
@@ -15,6 +16,7 @@ body {
     border-radius: 8px;
     background-color: #fff;
 }
+
 .container input {
     width: 100%;
     padding: 12px;
@@ -22,6 +24,7 @@ body {
     box-sizing: border-box;
     font-size: 16px;
 }
+
 .container button {
     width: 100%;
     padding: 12px;
@@ -33,6 +36,7 @@ body {
     margin: 10px 0;
     border-radius: 4px;
 }
+
 .container button:hover {
     background-color: #45a049;
 }
