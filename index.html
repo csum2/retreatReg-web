@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login with OTP</title>
     <link rel="stylesheet" href="style.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <div class="container">
@@ -16,12 +18,33 @@
         <button id="login">Login</button>
     </div>
 
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         const sendOtpUrl = 'http://localhost:3000/sendOTP';
         const verifyOtpUrl = 'http://localhost:3000/verifyOTP';
         const requestOtpBtn = document.getElementById('requestOtp');
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
+
+        // Check if user is logged in
+        checkLoginStatus();
+
+        function checkLoginStatus() {
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+            if (loginTimestamp) {
+                const now = new Date().getTime();
+                //const oneDay = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+                const oneDay = 60 * 1000; // unit test 1 minute in milliseconds
+                if (now - loginTimestamp > oneDay) {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('loginTimestamp');
+                } else {
+                    window.location.href = 'form.html'; // Redirect to the input form page
+                }
+            }
+        }
 
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,11 +57,22 @@
             otpField.value = '';
 
             if (!email) {
-                alert('Please enter your email address');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Email Required',
+                    text: 'Please enter your email address',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
+
             if (!validateEmail(email)) {
-                alert('Please enter a valid email');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Email',
+                    text: 'Please enter a valid email address',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
@@ -54,13 +88,29 @@
                 });
 
                 if (response.ok) {
-                    alert('OTP sent to your email');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Sent',
+                        text: 'OTP sent to your email',
+                        confirmButtonText: 'OK'
+                    });
                 } else {
-                    alert('Failed to send OTP');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to send OTP',
+                        confirmButtonText: 'Try Again'
+                    });
                     enableRequestButton();
                 }
             } catch (error) {
                 console.error('Error requesting OTP:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
                 enableRequestButton();
             }
         });
@@ -71,12 +121,22 @@
             const otp = otpField.value;
 
             if (!email) {
-                alert('Please enter your email');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Email Required',
+                    text: 'Please enter your email address',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
             if (!otp) {
-                alert('Please enter the OTP');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'OTP Required',
+                    text: 'Please enter the OTP',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
@@ -90,16 +150,33 @@
                 });
 
                 if (response.ok) {
-                    alert('Login successful');
-                    // Store login status in localStorage
-                    localStorage.setItem('isLoggedIn', 'true');
-                    // Redirect to the new form page
-                    window.location.href = 'form.html';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Successful',
+                        text: 'You have successfully logged in!',
+                        confirmButtonText: 'Proceed',
+                    }).then(() => {
+                        // Save login state and timestamp
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('loginTimestamp', new Date().getTime());
+                        window.location.href = 'form.html';
+                    });
                 } else {
-                    alert('Invalid OTP');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid OTP',
+                        text: 'The OTP you entered is incorrect. Please try again.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             } catch (error) {
                 console.error('Error during login:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
 
@@ -123,18 +200,6 @@
             requestOtpBtn.disabled = false;
             requestOtpBtn.innerText = 'Request One Time Password (OTP)';
         }
-
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || 
-               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
-               (e.ctrlKey && e.key === 'U')) {
-                e.preventDefault();
-            }
-        });
     </script>
 </body>
 </html>

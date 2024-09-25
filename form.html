@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Include SweetAlert2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <button class="logout-btn" id="logoutBtn">&times;</button>
+    <div class="container">
+        <h2>Enter Names</h2>
+        <input type="text" placeholder="Name 1" required>
+        <input type="text" placeholder="Name 2" required>
+        <input type="text" placeholder="Name 3" required>
+        <input type="text" placeholder="Name 4" required>
+        <button id="clearInput">Clear Input</button>
+        <button id="submitForm">Submit</button>
+    </div>
+
+    <script>
+        // Check login status on page load
+        window.onload = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+
+            // Check if user is logged in and if the login is still valid (within 1 day)
+            if (!isLoggedIn || !loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
+                // User is not logged in or session has expired
+                Swal.fire({
+                    title: 'Session Expired!',
+                    text: 'You have been logged out due to inactivity. Please log in again.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = 'index.html'; // Redirect to the login page
+                });
+            }
+
+            // Prevent going back to this page
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+            };
+        };
+
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Logout function
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('loginTimestamp');
+            window.location.href = 'index.html'; // Redirect to the login page
+        });
+
+        // Clear input button functionality
+        document.getElementById('clearInput').addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.container input[type="text"]');
+            inputs.forEach(input => input.value = '');
+        });
+
+        // Submit button functionality
+        document.getElementById('submitForm').addEventListener('click', () => {
+            // Placeholder logic for form submission
+            const inputs = document.querySelectorAll('.container input[type="text"]');
+            let names = Array.from(inputs).map(input => input.value).join(', ');
+
+            // Show SweetAlert2 popup
+            Swal.fire({
+                title: 'Form Submitted!',
+                text: `You entered: ${names}`,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+</body>
+</html>
