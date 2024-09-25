@@ -4,70 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login with OTP</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 100%;
-            max-width: 400px;  /* Sets a max width to avoid stretching too wide on desktops */
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background-color: #fff;
-        }
-        .container input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .container button:hover {
-            background-color: #45a049;
-        }
-
-        /* Media query for screens smaller than 600px (typical mobile screens) */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            .container input,
-            .container button {
-                font-size: 14px;  /* Slightly smaller font for mobile */
-                padding: 10px;     /* More comfortable button size for mobile */
-            }
-        }
-
-        /* Media query for larger screens (desktops) */
-        @media (min-width: 1024px) {
-            .container {
-                padding: 30px;
-            }
-            .container input,
-            .container button {
-                font-size: 18px;
-                padding: 15px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -79,32 +16,73 @@
     </div>
 
     <script>
-        // Update API endpoints
         const sendOtpUrl = 'http://localhost:3000/sendOTP';
         const verifyOtpUrl = 'http://localhost:3000/verifyOTP';
         const requestOtpBtn = document.getElementById('requestOtp');
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
+        let countdownInterval;
 
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailPattern.test(email);
         }
 
+        function startCountdown(seconds) {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const endTime = currentTime + seconds;
+            localStorage.setItem('otpCountdown', endTime);
+
+            updateButtonText(`Wait ${seconds}s`);
+            countdownInterval = setInterval(() => {
+                const remainingTime = localStorage.getItem('otpCountdown') - Math.floor(Date.now() / 1000);
+                if (remainingTime > 0) {
+                    updateButtonText(`Wait ${remainingTime}s`);
+                } else {
+                    clearInterval(countdownInterval);
+                    localStorage.removeItem('otpCountdown');  // Clear countdown after it ends
+                    updateButtonText('Request One Time Password (OTP)');
+                    requestOtpBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function updateButtonText(text) {
+            requestOtpBtn.textContent = text;
+        }
+
+        // Function to restore countdown after page reload
+        function restoreCountdown() {
+            const savedEndTime = localStorage.getItem('otpCountdown');
+            if (savedEndTime) {
+                const remainingTime = savedEndTime - Math.floor(Date.now() / 1000);
+                if (remainingTime > 0) {
+                    requestOtpBtn.disabled = true;
+                    startCountdown(remainingTime);  // Resume countdown from where it left off
+                } else {
+                    localStorage.removeItem('otpCountdown');  // Clear if expired
+                }
+            }
+        }
+
         // Request OTP
         requestOtpBtn.addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             otpField.value = '';  // Clear the OTP field when requesting a new OTP
-            //otpField.removeAttribute('required');  // Remove required attribute
 
             if (!email) {
                 alert('Please enter your email address');
                 return;
             }
-            if (!validateEmail(email.value)) {
+            if (!validateEmail(email)) {
                 alert('Please enter a valid email');
                 return;
             }
+
+            // Disable the button immediately after click
+            requestOtpBtn.disabled = true;
+            updateButtonText('Processing...');
+
             try {
                 const response = await fetch(sendOtpUrl, {
                     method: 'POST',
@@ -116,11 +94,16 @@
 
                 if (response.ok) {
                     alert('OTP sent to your email');
+                    startCountdown(60);  // Start the 60-second countdown after successful request
                 } else {
                     alert('Failed to send OTP');
+                    requestOtpBtn.disabled = false;  // Re-enable button on error
+                    updateButtonText('Request One Time Password (OTP)');
                 }
             } catch (error) {
                 console.error('Error requesting OTP:', error);
+                requestOtpBtn.disabled = false;  // Re-enable button on error
+                updateButtonText('Request One Time Password (OTP)');
             }
         });
 
@@ -128,8 +111,6 @@
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             const otp = otpField.value;
-            
-            otpField.setAttribute('required', 'true');  // Add required attribute on login
 
             if (!email) {
                 alert('Please enter your email');
@@ -159,6 +140,10 @@
                 console.error('Error during login:', error);
             }
         });
+
+        // Restore countdown if page is refreshed
+        window.onload = restoreCountdown;
+
     </script>
 </body>
 </html>
