@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Form</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Include SweetAlert2 CSS and JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -13,69 +12,107 @@
     <button class="logout-btn" id="logoutBtn">&times;</button>
     <div class="container">
         <h2>Enter Names</h2>
-        <input type="text" placeholder="Name 1" required>
-        <input type="text" placeholder="Name 2" required>
-        <input type="text" placeholder="Name 3" required>
-        <input type="text" placeholder="Name 4" required>
+        <input type="text" id="name1" placeholder="Name 1" required>
+        <input type="text" id="name2" placeholder="Name 2" required>
+        <input type="text" id="name3" placeholder="Name 3" required>
+        <input type="text" id="name4" placeholder="Name 4" required>
         <button id="clearInput">Clear Input</button>
         <button id="submitForm">Submit</button>
     </div>
 
     <script>
-        // Check login status on page load
-        window.onload = () => {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
+        function checkLoginStatus() {
             const loginTimestamp = localStorage.getItem('loginTimestamp');
-
-            // Check if user is logged in and if the login is still valid (within 1 day)
-            if (!isLoggedIn || !loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
-                // User is not logged in or session has expired
+            if (!loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
                 Swal.fire({
                     title: 'Session Expired!',
                     text: 'You have been logged out due to inactivity. Please log in again.',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    window.location.href = 'index.html'; // Redirect to the login page
+                    window.location.href = 'index.html';
                 });
+                return false;
             }
+            return true;
+        }
 
-            // Prevent going back to this page
-            history.pushState(null, null, location.href);
-            window.onpopstate = function() {
-                history.pushState(null, null, location.href);
-            };
+        window.onload = () => {
+            if (!checkLoginStatus()) return;
+
+            history.replaceState(null, null, location.href); // Prevent back navigation
+            loadUserData(); // Load user data from localStorage
         };
 
         const logoutBtn = document.getElementById('logoutBtn');
 
-        // Logout function
         logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('loginTimestamp');
-            window.location.href = 'index.html'; // Redirect to the login page
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userData');
+            window.location.href = 'index.html';
         });
 
-        // Clear input button functionality
         document.getElementById('clearInput').addEventListener('click', () => {
             const inputs = document.querySelectorAll('.container input[type="text"]');
             inputs.forEach(input => input.value = '');
         });
 
-        // Submit button functionality
-        document.getElementById('submitForm').addEventListener('click', () => {
-            // Placeholder logic for form submission
-            const inputs = document.querySelectorAll('.container input[type="text"]');
-            let names = Array.from(inputs).map(input => input.value).join(', ');
+        document.getElementById('submitForm').addEventListener('click', async () => {
+            if (!checkLoginStatus()) return;
 
-            // Show SweetAlert2 popup
-            Swal.fire({
-                title: 'Form Submitted!',
-                text: `You entered: ${names}`,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
+            const email = JSON.parse(localStorage.getItem('userData')).email;
+            const names = [
+                document.getElementById('name1').value,
+                document.getElementById('name2').value,
+                document.getElementById('name3').value,
+                document.getElementById('name4').value,
+            ];
+
+            try {
+                const response = await fetch('http://localhost:3000/saveFormData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, names }),
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        title: 'Form Submitted!',
+                        text: `You entered: ${names.join(', ')}`,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    throw new Error('Failed to save data');
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Could not submit form data. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
         });
+
+        // Load existing user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData && userData.names) {
+                document.getElementById('name1').value = userData.names[0] || '';
+                document.getElementById('name2').value = userData.names[1] || '';
+                document.getElementById('name3').value = userData.names[2] || '';
+                document.getElementById('name4').value = userData.names[3] || '';
+            }
+        }
+
+        window.onpopstate = function(event) {
+            window.history.pushState(null, document.title, window.location.href);
+        };
     </script>
 </body>
 </html>

@@ -117,68 +117,63 @@
 
         // Login with OTP
         loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
-            const otp = otpField.value;
+        const email = document.getElementById('email').value;
+        const otp = otpField.value;
 
-            if (!email) {
+        if (!email || !otp) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Required fields',
+                text: 'Please enter both email and OTP',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch(verifyOtpUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, otp }),
+            });
+
+            if (response.ok) {
+                const { userData } = await response.json();
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loginTimestamp', new Date().getTime());
+                localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
+                const userDataJSON = JSON.stringify(userData);
+                console.log(`User data fetched: ${userDataJSON}`);
+                
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'Email Required',
-                    text: 'Please enter your email address',
-                    confirmButtonText: 'OK'
+                    icon: 'success',
+                    title: 'Login Successful',
+                    text: 'You have successfully logged in!',
+                    confirmButtonText: 'Proceed',
+                }).then(() => {
+                    window.location.href = 'form.html';
                 });
-                return;
-            }
-
-            if (!otp) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'OTP Required',
-                    text: 'Please enter the OTP',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-
-            try {
-                const response = await fetch(verifyOtpUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, otp }),
-                });
-
-                if (response.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Login Successful',
-                        text: 'You have successfully logged in!',
-                        confirmButtonText: 'Proceed',
-                    }).then(() => {
-                        // Save login state and timestamp
-                        localStorage.setItem('isLoggedIn', 'true');
-                        localStorage.setItem('loginTimestamp', new Date().getTime());
-                        window.location.href = 'form.html';
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid OTP',
-                        text: 'The OTP you entered is incorrect. Please try again.',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            } catch (error) {
-                console.error('Error during login:', error);
+            } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Something went wrong. Please try again later.',
+                    title: 'Invalid OTP',
+                    text: 'The OTP you entered is incorrect. Please try again.',
                     confirmButtonText: 'OK'
                 });
             }
-        });
+        } catch (error) {
+            console.error('Error during login:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Something went wrong. Please try again later.',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+
 
         function disableRequestButton(seconds) {
             requestOtpBtn.disabled = true;
