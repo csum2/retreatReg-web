@@ -80,3 +80,22 @@ p {
     background-color: #4CAF50; /* Green for enabled button */
     color: white;
 }
+
+/* Styles for select elements */
+.container select {
+    width: 100%; /* Full width */
+    padding: 12px; /* Same padding as input fields */
+    margin: 10px 0; /* Consistent margin */
+    box-sizing: border-box; /* Include padding in total width */
+    font-size: 16px; /* Consistent font size */
+    border: 2px solid #4CAF50; /* Green border to match buttons */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* White background */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+/* Change border color on focus */
+.container select:focus {
+    border-color: #45a049; /* Darker green on focus */
+    outline: none; /* Remove default outline */
+}
