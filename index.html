@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login with OTP</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
@@ -22,8 +22,19 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        const sendOtpUrl = 'http://localhost:3000/sendOTP';
-        const verifyOtpUrl = 'http://localhost:3000/verifyOTP';
+        // Determine the environment
+        let baseUrl;
+
+        if (window.location.hostname === 'localhost') {
+            baseUrl = 'http://localhost:3000'; // Local development
+        } else if (window.location.hostname === '192.168.1.117') {
+            baseUrl = 'http://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
+        } else {
+            baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
+        }
+
+        const sendOtpUrl = `${baseUrl}/sendOTP`;
+        const verifyOtpUrl = `${baseUrl}/verifyOTP`;
         const requestOtpBtn = document.getElementById('requestOtp');
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
@@ -146,7 +157,7 @@
                 localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
                 const userDataJSON = JSON.stringify(userData);
                 console.log(`User data fetched: ${userDataJSON}`);
-                
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Login Successful',

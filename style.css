@@ -15,6 +15,49 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background-color: #fff;
+    position: relative; /* Allow positioning of the logout button */
+}
+
+.logout-btn {
+    position: absolute;
+    z-index: 1;
+    top: 2px; /* Adjust as necessary */
+    right: 2px; /* Adjust as necessary */
+    background-color: red; /* Red color for the button */
+    color: yellow; /* Yellow text for the button */
+    border: none;
+    cursor: pointer;
+    font-size: 14px; /* Adjust font size */
+    padding: 8px 12px; /* Padding for the button */
+    border-radius: 4px; /* Rounded corners */
+}
+
+p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#calculateFee {
+    padding: 10px 20px; /* Adjust padding for a smaller button */
+    width: auto; /* Ensure the width is adjusted to the content */
+    margin-left: auto; /* Push the calculate button to the right */
+}
+
+#submitForm, #clearInput {
+    width: 100%; /* Keep other buttons full width */
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+/* Add hover effect for enabled button */
+.btn-enabled:hover {
+    background-color: #45a049; /* Darker green on hover */
 }
 
 .container input {
@@ -28,26 +71,12 @@ body {
 .container button {
     width: 100%;
     padding: 12px;
-    background-color: #4CAF50;
-    color: white;
     border: none;
     cursor: pointer;
     font-size: 16px;
     margin: 10px 0;
     border-radius: 4px;
-}
-
-.container button:hover {
-    background-color: #45a049;
-}
-
-.logout-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    color: #ff0000; /* Red color for the icon */
+    transition: background-color 0.3s; /* Add transition for smooth color change */
+    background-color: #4CAF50; /* Green for enabled button */
+    color: white;
 }

@@ -3,116 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Form</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Retreat Registration Form</title>
+    <link rel="stylesheet" href="/style.css"> <!-- Link to external CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <button class="logout-btn" id="logoutBtn">&times;</button>
+    <button class="logout-btn" id="logoutBtn" style="width: auto;">&#10006;</button>
     <div class="container">
-        <h2>Enter Names</h2>
+        <h2>Retreat Registration Form</h2>
+        <p id="eventInfo"><!-- Fill in the content for event information later --> </p>
+
+        <label for="familyCount">Number of families in the unit:</label>
+        <select id="familyCount">
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+
+        <h3>Room 1</h3>
         <input type="text" id="name1" placeholder="Name 1" required>
         <input type="text" id="name2" placeholder="Name 2" required>
-        <input type="text" id="name3" placeholder="Name 3" required>
-        <input type="text" id="name4" placeholder="Name 4" required>
-        <button id="clearInput">Clear Input</button>
-        <button id="submitForm">Submit</button>
+
+        <h3>Room 2</h3>
+        <input type="text" id="name3" placeholder="Name 3">
+        <input type="text" id="name4" placeholder="Name 4">
+
+        <label>T-shirt Order details:</label>
+        <table id="tshirtOrderTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Order</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added dynamically -->
+            </tbody>
+        </table>
+
+        <p style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="totalFee">Total Fee: $0.00</span>
+            <button id="calculateFee" style="width: auto;">Calculate</button>
+        </p>
+
+        <button id="clearInput">Clear</button>
+        <button id="submitForm" disabled>Submit</button>
     </div>
 
     <script>
-        function checkLoginStatus() {
-            const loginTimestamp = localStorage.getItem('loginTimestamp');
-            if (!loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
-                Swal.fire({
-                    title: 'Session Expired!',
-                    text: 'You have been logged out due to inactivity. Please log in again.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = 'index.html';
-                });
-                return false;
-            }
-            return true;
+        const nameInputs = [document.getElementById('name1'), document.getElementById('name2'), document.getElementById('name3'), document.getElementById('name4')];
+        const tshirtOrderTableBody = document.getElementById('tshirtOrderTable').getElementsByTagName('tbody')[0];
+        const submitButton = document.getElementById('submitForm');
+
+        // Function to add a new row to the T-shirt order table
+        function addTshirtRow(name) {
+            const row = tshirtOrderTableBody.insertRow();
+
+            const nameCell = row.insertCell(0);
+            const orderCell = row.insertCell(1);
+            const colorCell = row.insertCell(2);
+            const sizeCell = row.insertCell(3);
+
+            nameCell.innerHTML = `<input type="text" value="${name}" readonly>`;
+            orderCell.innerHTML = `<input type="checkbox" class="orderCheckbox">`;
+            colorCell.innerHTML = `<select class="colorSelect" disabled>
+                                    <option value="Black">Black</option>
+                                    <option value="White">White</option>
+                                    <option value="Red">Red</option>
+                                   </select>`;
+            sizeCell.innerHTML = `<select class="sizeSelect" disabled>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                   </select>`;
+
+            attachCheckboxListener(orderCell.firstChild, colorCell.firstChild, sizeCell.firstChild);
         }
 
-        window.onload = () => {
-            if (!checkLoginStatus()) return;
+        // Attach checkbox listener to enable color and size selects
+        function attachCheckboxListener(checkbox, colorSelect, sizeSelect) {
+            checkbox.addEventListener('change', () => {
+                const isChecked = checkbox.checked;
+                colorSelect.disabled = !isChecked;
+                sizeSelect.disabled = !isChecked;
+            });
+        }
 
-            history.replaceState(null, null, location.href); // Prevent back navigation
-            loadUserData(); // Load user data from localStorage
-        };
+        // Watch for input changes to add rows dynamically
+        nameInputs.forEach((input, index) => {
+            input.addEventListener('blur', () => {
+                const nameValue = input.value.trim();
+                const existingRows = Array.from(tshirtOrderTableBody.rows);
+                
+                // Check if the row already exists or if maximum rows reached
+                if (nameValue && existingRows.length < 4 && !existingRows.some(row => row.cells[0].firstChild.value === nameValue)) {
+                    addTshirtRow(nameValue);
+                }
+            });
+        });
 
-        const logoutBtn = document.getElementById('logoutBtn');
+        // Update button class and style based on state
+        function updateButtonStyle() {
+            if (submitButton.disabled) {
+                submitButton.style.backgroundColor = "#d3d3d3"; // Light gray for disabled
+                submitButton.style.color = "darkgray";
+                submitButton.style.cursor = "not-allowed";
+            } else {
+                submitButton.style.backgroundColor = "#00b306"; // Green for enabled
+                submitButton.style.color = "white";
+                submitButton.style.cursor = "pointer";
+            }
+        }
+        // Calculate total fee function
+        function calculateTotalFee() {
+            let total = 0;
+            const rows = Array.from(tshirtOrderTableBody.rows);
 
-        logoutBtn.addEventListener('click', () => {
+            rows.forEach(row => {
+                const checkbox = row.cells[1].firstChild;
+                if (checkbox.checked) {
+                    // Assuming each T-shirt costs $10; adjust the calculation as needed
+                    total += 10;
+                }
+            });
+
+            // Update total fee display
+            document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
+            
+            // Enable submit button if total is greater than 0, otherwise disable it
+            submitButton.disabled = total === 0; // Enable submit button if total is greater than 0
+            updateButtonStyle(); // Update button color
+        }
+
+        document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
+
+        // Clear form and reset button state
+        document.getElementById('clearInput').addEventListener('click', () => {
+            nameInputs.forEach(input => input.value = '');
+            tshirtOrderTableBody.innerHTML = ''; // Clear the table rows
+            document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
+            submitButton.disabled = true; // Disable submit button
+            updateButtonStyle(); // Reset button color
+        });
+
+        document.getElementById('submitForm').addEventListener('click', async () => {
+            // Submit form logic goes here (e.g., calculate total fee and send data to the server)
+            Swal.fire({
+                    icon: 'success',
+                    title: 'Registration Completed',
+                    text: 'Please pay the fee by the deadline.',
+                    confirmButtonText: 'OK'
+                });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('loginTimestamp');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userData');
             window.location.href = 'index.html';
         });
 
-        document.getElementById('clearInput').addEventListener('click', () => {
-            const inputs = document.querySelectorAll('.container input[type="text"]');
-            inputs.forEach(input => input.value = '');
-        });
-
-        document.getElementById('submitForm').addEventListener('click', async () => {
-            if (!checkLoginStatus()) return;
-
-            const email = JSON.parse(localStorage.getItem('userData')).email;
-            const names = [
-                document.getElementById('name1').value,
-                document.getElementById('name2').value,
-                document.getElementById('name3').value,
-                document.getElementById('name4').value,
-            ];
-
-            try {
-                const response = await fetch('http://localhost:3000/saveFormData', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, names }),
-                });
-
-                if (response.ok) {
-                    Swal.fire({
-                        title: 'Form Submitted!',
-                        text: `You entered: ${names.join(', ')}`,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                } else {
-                    throw new Error('Failed to save data');
-                }
-            } catch (error) {
-                console.error(error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Could not submit form data. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-
-        // Load existing user data from localStorage
-        function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData && userData.names) {
-                document.getElementById('name1').value = userData.names[0] || '';
-                document.getElementById('name2').value = userData.names[1] || '';
-                document.getElementById('name3').value = userData.names[2] || '';
-                document.getElementById('name4').value = userData.names[3] || '';
-            }
-        }
-
-        window.onpopstate = function(event) {
-            window.history.pushState(null, document.title, window.location.href);
-        };
+        updateButtonStyle();
     </script>
 </body>
 </html>
