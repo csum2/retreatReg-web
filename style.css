@@ -1,17 +1,17 @@
 body {
-    font-family: 'Roboto', sans-serif; /* Change to a more professional and modern font */
+    font-family: 'Roboto', sans-serif; /* Professional and modern font */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #eef2f7; /* Slightly lighter background for a more polished look */
+    background-color: #eef2f7; /* Light background */
 }
 
-/* Style for the horizontal line divider */
+/* Horizontal line divider */
 .divider {
     border: none;
-    border-top: 1px solid #ccc; /* Slightly darker for better contrast */
+    border-top: 1px solid #ccc;
     margin: 20px 0;
 }
 
@@ -22,18 +22,17 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background-color: #fff;
-    position: relative; /* Allow positioning of the logout button */
-    max-height: 80vh; /* Set a maximum height for the container */
+    position: relative;
+    max-height: 80vh; /* Set a maximum height */
     overflow-y: auto; /* Enable vertical scrolling */
 }
 
-/* Style for logout button */
+/* Logout button style */
 .logout-btn {
     position: absolute;
-    z-index: 1;
     top: 2px;
     right: 10px;
-    background-color: #d9534f; /* Bootstrap's red color */
+    background-color: #d9534f;
     color: white;
     border: none;
     cursor: pointer;
@@ -42,15 +41,15 @@ body {
     border-radius: 5px;
 }
 
-/* Style for form instructions and event info */
+/* General text and labels */
 p, h3, label {
-    color: #333; /* Dark gray for readability */
-    font-size: 16px; /* Consistent font size */
+    color: #333;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 
-/* Style for input fields */
-.container input {
+/* Input field styles */
+.container input, .container select {
     width: 100%;
     padding: 14px;
     margin: 10px 0;
@@ -61,31 +60,13 @@ p, h3, label {
     transition: border-color 0.3s;
 }
 
-/* Input fields: change border on focus */
-.container input:focus {
+/* Input fields: border color on focus */
+.container input:focus, .container select:focus {
     border-color: #4CAF50;
     outline: none;
 }
 
-/* Style for select elements */
-.container select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    box-sizing: border-box;
-    font-size: 16px;
-    border: 1px solid #4CAF50;
-    border-radius: 4px;
-    background-color: #fff;
-    transition: border-color 0.3s;
-}
-
-.container select:focus {
-    border-color: #45a049;
-    outline: none;
-}
-
-/* Table styling for T-shirt order */
+/* T-shirt order table styling */
 #tshirtOrderTable {
     width: 100%;
     border-collapse: collapse;
@@ -96,26 +77,28 @@ p, h3, label {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    color: #555; /* Darker font color for table content */
+    color: #555; /* Darker font color */
 }
 
+/* Column width adjustment */
 #tshirtOrderTable th:first-child,
 #tshirtOrderTable td:first-child {
-    width: 35%;
+    width: 10%; /* Narrowest column for row numbers */
 }
 
 #tshirtOrderTable th:nth-child(2),
 #tshirtOrderTable td:nth-child(2) {
-    width: 40px;
-    text-align: center;
+    width: 50%; /* Widest column for color dropdown */
 }
 
-#tshirtOrderTable th:nth-child(3), #tshirtOrderTable td:nth-child(3) {
-    width: 38%;
+#tshirtOrderTable th:nth-child(3),
+#tshirtOrderTable td:nth-child(3) {
+    width: 20%; /* Size column with enough width for 'WW' */
 }
 
-#tshirtOrderTable th:nth-child(4), #tshirtOrderTable td:nth-child(4) {
-    width: 30%;
+#tshirtOrderTable th:nth-child(4),
+#tshirtOrderTable td:nth-child(4) {
+    width: 20%; /* Qty column with enough width for 'WW' */
 }
 
 /* Button styling */
@@ -130,15 +113,8 @@ button {
     border: none;
 }
 
-/* Button styles when active */
 button:active {
     transform: scale(0.98);
-}
-
-/* Hover and enabled states */
-button#calculateFee:hover,
-button#submitForm:hover {
-    background-color: #45a049;
 }
 
 button#calculateFee {
@@ -152,22 +128,33 @@ button#submitForm:disabled {
     cursor: not-allowed;
 }
 
-/* Style for the total fee section */
+button#calculateFee:hover, button#submitForm:hover {
+    background-color: #45a049;
+}
+
+/* Total fee section */
 #totalFee {
     font-weight: bold;
     color: #000;
     font-size: 18px;
 }
 
-/* Styles for event information paragraphs */
+/* Event info styling */
 #eventInfo1, #eventInfo2 {
-    font-family: 'Georgia', serif; /* Elegant font type */
-    font-size: 16px; /* Increased font size for readability */
-    color: #333; /* Dark gray color for a professional look */
-    line-height: 1.6; /* Improved line height for better readability */
-    margin: 10px 0; /* Margin for spacing */
-    padding: 10px; /* Padding for a better visual effect */
-    border-left: 4px solid #4CAF50; /* Green left border for emphasis */
-    background-color: #f9f9f9; /* Light background color for contrast */
-    border-radius: 5px; /* Rounded corners for a softer look */
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 4px solid #4CAF50;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
 }

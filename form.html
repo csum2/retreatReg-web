@@ -12,10 +12,11 @@
     <button class="logout-btn" id="logoutBtn" style="width: auto;">&#10006;</button>
     <div class="container">
         <h2>Retreat Registration Form</h2>
-        <p id="eventInfo1"><!-- Fill in the content for event information later --> 
+        <p id="eventInfo1">
+            <!-- Fill in the content for event information later --> 
             Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999.  Besides, each person has to pay for a meal plan of $200.  The meal plan includes two meals per day for two days.  There are no partial meal plans available.
         </p>
-        <p></p>
+        
         <label for="familyCount">Number of families in the unit:</label>
         <select id="familyCount">
             <option value="1">1</option>
@@ -30,23 +31,135 @@
         <input type="text" id="name3" placeholder="Name 3">
         <input type="text" id="name4" placeholder="Name 4">
 
-        <hr class="divider"> 
+        <hr class="divider">
 
         <label>T-shirt Order details:</label>
-        <p id="eventInfo2"><!-- Fill in the content for event information later -->     
-            The price for each T-shirt is $20.  If you wish to place an order, click the checkbox below and select the colour and size.
+        <p id="eventInfo2">
+            The price for each T-shirt is $20. Please select the color, size, and quantity.
         </p>
+        
         <table id="tshirtOrderTable">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Buy</th>
+                    <th>#</th>
                     <th>Color</th>
                     <th>Size</th>
+                    <th>Qty</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Rows will be added dynamically -->
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <select class="colorSelect">
+                            <option value="Black" selected>Black</option>
+                            <option value="White">White</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Red">Red</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="sizeSelect">
+                            <option value="S" selected>S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="qtySelect">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>
+                        <select class="colorSelect">
+                            <option value="Black" selected>Black</option>
+                            <option value="White">White</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Red">Red</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="sizeSelect">
+                            <option value="S" selected>S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="qtySelect">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>
+                        <select class="colorSelect">
+                            <option value="Black" selected>Black</option>
+                            <option value="White">White</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Red">Red</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="sizeSelect">
+                            <option value="S" selected>S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="qtySelect">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>
+                        <select class="colorSelect">
+                            <option value="Black" selected>Black</option>
+                            <option value="White">White</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Red">Red</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="sizeSelect">
+                            <option value="S" selected>S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="qtySelect">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -60,110 +173,41 @@
     </div>
 
     <script>
-        const nameInputs = [document.getElementById('name1'), document.getElementById('name2'), document.getElementById('name3'), document.getElementById('name4')];
-        const tshirtOrderTableBody = document.getElementById('tshirtOrderTable').getElementsByTagName('tbody')[0];
         const submitButton = document.getElementById('submitForm');
+        const qtySelects = document.querySelectorAll('.qtySelect');
 
-        // Function to add a new row to the T-shirt order table
-        function addTshirtRow(name) {
-            const row = tshirtOrderTableBody.insertRow();
-
-            const nameCell = row.insertCell(0);
-            const orderCell = row.insertCell(1);
-            const colorCell = row.insertCell(2);
-            const sizeCell = row.insertCell(3);
-
-            nameCell.innerHTML = `<input type="text" value="${name}" readonly>`;
-            orderCell.innerHTML = `<input type="checkbox" class="orderCheckbox">`;
-            colorCell.innerHTML = `<select class="colorSelect" disabled>
-                                    <option value="Black">Black</option>
-                                    <option value="White">White</option>
-                                    <option value="Red">Red</option>
-                                   </select>`;
-            sizeCell.innerHTML = `<select class="sizeSelect" disabled>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                   </select>`;
-
-            attachCheckboxListener(orderCell.firstChild, colorCell.firstChild, sizeCell.firstChild);
-        }
-
-        // Attach checkbox listener to enable color and size selects
-        function attachCheckboxListener(checkbox, colorSelect, sizeSelect) {
-            checkbox.addEventListener('change', () => {
-                const isChecked = checkbox.checked;
-                colorSelect.disabled = !isChecked;
-                sizeSelect.disabled = !isChecked;
-            });
-        }
-
-        // Watch for input changes to add rows dynamically
-        nameInputs.forEach((input, index) => {
-            input.addEventListener('blur', () => {
-                const nameValue = input.value.trim();
-                const existingRows = Array.from(tshirtOrderTableBody.rows);
-                
-                // Check if the row already exists or if maximum rows reached
-                if (nameValue && existingRows.length < 4 && !existingRows.some(row => row.cells[0].firstChild.value === nameValue)) {
-                    addTshirtRow(nameValue);
-                }
-            });
-        });
-
-        // Update button class and style based on state
-        function updateButtonStyle() {
-            if (submitButton.disabled) {
-                submitButton.style.backgroundColor = "#d3d3d3"; // Light gray for disabled
-                submitButton.style.color = "darkgray";
-                submitButton.style.cursor = "not-allowed";
-            } else {
-                submitButton.style.backgroundColor = "#00b306"; // Green for enabled
-                submitButton.style.color = "white";
-                submitButton.style.cursor = "pointer";
-            }
-        }
-        // Calculate total fee function
+        // Function to calculate total fee
         function calculateTotalFee() {
             let total = 0;
-            const rows = Array.from(tshirtOrderTableBody.rows);
-
-            rows.forEach(row => {
-                const checkbox = row.cells[1].firstChild;
-                if (checkbox.checked) {
-                    // Assuming each T-shirt costs $10; adjust the calculation as needed
-                    total += 10;
-                }
+            qtySelects.forEach(select => {
+                const qty = parseInt(select.value);
+                total += qty * 20; // Each T-shirt costs $20
             });
 
-            // Update total fee display
             document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
-            
+
             // Enable submit button if total is greater than 0, otherwise disable it
-            submitButton.disabled = total === 0; // Enable submit button if total is greater than 0
-            updateButtonStyle(); // Update button color
+            submitButton.disabled = total === 0;
         }
 
         document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
 
-        // Clear form and reset button state
+        // Clear form
         document.getElementById('clearInput').addEventListener('click', () => {
-            nameInputs.forEach(input => input.value = '');
-            tshirtOrderTableBody.innerHTML = ''; // Clear the table rows
+            document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
+                select.selectedIndex = 0;
+            });
             document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
-            submitButton.disabled = true; // Disable submit button
-            updateButtonStyle(); // Reset button color
+            submitButton.disabled = true;
         });
 
-        document.getElementById('submitForm').addEventListener('click', async () => {
-            // Submit form logic goes here (e.g., calculate total fee and send data to the server)
+        document.getElementById('submitForm').addEventListener('click', () => {
             Swal.fire({
-                    icon: 'success',
-                    title: 'Registration Completed',
-                    text: 'Please pay the fee by the deadline.',
-                    confirmButtonText: 'OK'
-                });
+                icon: 'success',
+                title: 'Order Submitted',
+                text: 'Your order has been submitted successfully.',
+                confirmButtonText: 'OK'
+            });
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -172,8 +216,6 @@
             localStorage.removeItem('userData');
             window.location.href = 'index.html';
         });
-
-        updateButtonStyle();
     </script>
 </body>
 </html>
