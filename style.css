@@ -140,7 +140,7 @@ button#calculateFee:hover, button#submitForm:hover {
 }
 
 /* Event info styling */
-#eventInfo1, #eventInfo2 {
+#eventInfo1, #eventInfo2, #eventInfo3 {
     font-family: 'Georgia', serif;
     font-size: 16px;
     color: #333;

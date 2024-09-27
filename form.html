@@ -16,7 +16,7 @@
             Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999. Besides, each person has to pay for a meal plan of $200. The meal plan includes two meals per day for two days. There are no partial meal plans available.
         </p>
         
-        <label for="familyCount">Number of families in the unit:</label>
+        <label for="numFamilies">Number of families in the unit:</label>
         <select id="numFamilies">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -160,9 +160,11 @@
                         </select>
                     </td>
                 </tr>
-
             </tbody>
         </table>
+        <p id="eventInfo3">
+            Please click the calculate button to see the total fees before you submit the registration.
+        </p>
 
         <p style="display: flex; justify-content: space-between; align-items: center;">
             <span id="totalFee">Total Fee: $0.00</span>
@@ -175,87 +177,118 @@
 
     <script>
         const numFamiliesSelect = document.getElementById('numFamilies');
-        const nameInputs = [document.getElementById('name1'), document.getElementById('name2'), document.getElementById('name3'), document.getElementById('name4')];
+        const nameInputs = [
+            document.getElementById('name1'), 
+            document.getElementById('name2'), 
+            document.getElementById('name3'), 
+            document.getElementById('name4')
+        ];
         const submitButton = document.getElementById('submitForm');
         const qtySelects = document.querySelectorAll('.qtySelect');
 
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('registrationForm');
-
             function updateNameFields() {
                 const numFamilies = parseInt(numFamiliesSelect.value);
-                nameInputs[0].required = true;
-                nameInputs[1].required = false;
-                nameInputs[2].required = (numFamilies === 2);
-                nameInputs[3].required = false;
+                nameInputs[0].required = true; // Name 1 is always required
+                nameInputs[1].required = false; // Name 2 is not required
+                nameInputs[2].required = (numFamilies === 2); // Name 3 is required only if 2 families
+                nameInputs[3].required = false; // Name 4 is not required
             }
 
             numFamiliesSelect.addEventListener('change', updateNameFields);
 
-            form.addEventListener('submit', function(event) {
-                if (!nameInputs[0].checkValidity() || (numFamiliesSelect.value == '2' && !nameInputs[2].checkValidity())) {
-                    event.preventDefault();
-                    alert('Please fill in the required fields.');
+            // Function to check if all required fields are filled
+            function checkRequiredFields() {
+                const isName1Valid = nameInputs[0].checkValidity();
+                const isName3Valid = numFamiliesSelect.value == '2' ? nameInputs[2].checkValidity() : true; // Only check Name 3 if 2 families
+                return isName1Valid && isName3Valid;
+            }
+
+            // Disable submit button initially
+            submitButton.disabled = true;
+
+            // Enable/disable submit button based on required fields
+            nameInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    submitButton.disabled = !checkRequiredFields();
+                });
+            });
+
+            // Calculate Total Fee
+            function calculateTotalFee() {
+                let total = 999; // Fixed fee
+                let tShirtCount = 0;
+
+                qtySelects.forEach(select => {
+                    tShirtCount += parseInt(select.value);
+                });
+
+                total += tShirtCount * 20; // Add T-shirt costs
+                // Add meal plan cost per name entered
+
+                document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
+                //submitButton.disabled = tShirtCount === 999 || !checkRequiredFields();
+                submitButton.disabled = tShirtCount === 999
+            }
+
+            document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
+
+            // Clear form
+            document.getElementById('clearInput').addEventListener('click', () => {
+                // Clear name inputs
+                nameInputs.forEach(input => {
+                    input.value = ''; // Clear the input value
+                });
+
+                // Reset family count to default
+                numFamiliesSelect.selectedIndex = 0; // Reset to the first option (1 family)
+
+                // Reset select elements
+                document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
+                    select.selectedIndex = 0; // Reset to the first option
+                });
+
+                // Reset total fee
+                document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
+
+                // Disable the submit button
+                submitButton.disabled = true;
+
+                // Re-initialize the name fields based on the reset number of families
+                updateNameFields();
+            });
+
+            document.getElementById('submitForm').addEventListener('click', () => {
+                if (!checkRequiredFields()) {
+                    let missingFields = [];
+                    if (!nameInputs[0].checkValidity()) missingFields.push('Name 1');
+                    if (numFamiliesSelect.value === '2' && !nameInputs[2].checkValidity()) missingFields.push('Name 3');
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Missing Fields',
+                        text: `Please fill in the following fields: ${missingFields.join(', ')}`,
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order Submitted',
+                        text: 'Your order has been submitted successfully.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
 
-            // Initialize the form on page load
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('loginTimestamp');
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userData');
+                window.location.href = 'index.html';
+            });
+
+            // Initial setup
             updateNameFields();
-        });
-        
-        // Function to calculate total fee
-        function calculateTotalFee() {
-            let total = 0;
-            qtySelects.forEach(select => {
-                const qty = parseInt(select.value);
-                total += qty * 20; // Each T-shirt costs $20
-            });
-
-            document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
-            submitButton.disabled = total === 0;
-        }
-
-        document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
-
-        // Clear form
-        document.getElementById('clearInput').addEventListener('click', () => {
-            // Clear name inputs
-            nameInputs.forEach(input => {
-                input.value = ''; // Clear the input value
-            });
-
-            // Reset family count to default
-            numFamiliesSelect.selectedIndex = 0; // Reset to the first option (1 family)
-
-            // Reset select elements
-            document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
-                select.selectedIndex = 0; // Reset to the first option
-            });
-
-            // Reset total fee
-            document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
-
-            // Disable the submit button
-            submitButton.disabled = true;
-
-            // Re-initialize the name fields based on the reset number of families
-            updateNameFields();
-        });
-
-        document.getElementById('submitForm').addEventListener('click', () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Order Submitted',
-                text: 'Your order has been submitted successfully.',
-                confirmButtonText: 'OK'
-            });
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('loginTimestamp');
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userData');
-            window.location.href = 'index.html';
         });
     </script>
 </body>
