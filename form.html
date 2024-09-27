@@ -24,11 +24,15 @@
 
         <h3>Room 1</h3>
         <input type="text" id="name1" placeholder="Name 1" required>
+        <span class="hint" id="hintName1">Required for all families</span>
         <input type="text" id="name2" placeholder="Name 2">
+        <span class="hint" id="hintName2" style="display: none;">Optional</span>
 
         <h3>Room 2</h3>
         <input type="text" id="name3" placeholder="Name 3">
+        <span class="hint" id="hintName3" style="display: none;">Required if 2 families</span>
         <input type="text" id="name4" placeholder="Name 4">
+        <span class="hint" id="hintName4" style="display: none;">Optional</span>
 
         <hr class="divider">
 
@@ -193,6 +197,12 @@
                 nameInputs[1].required = false; // Name 2 is not required
                 nameInputs[2].required = (numFamilies === 2); // Name 3 is required only if 2 families
                 nameInputs[3].required = false; // Name 4 is not required
+                
+                // Update hints based on the number of families
+                document.getElementById('hintName1').style.display = 'inline'; // Always show
+                document.getElementById('hintName2').style.display = 'none'; // Hide Name 2 hint
+                document.getElementById('hintName3').style.display = (numFamilies === 2) ? 'inline' : 'none'; // Show Name 3 hint if 2 families
+                document.getElementById('hintName4').style.display = 'none'; // Hide Name 4 hint
             }
 
             numFamiliesSelect.addEventListener('change', updateNameFields);
@@ -227,8 +237,8 @@
                 // Add meal plan cost per name entered
 
                 document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
-                //submitButton.disabled = tShirtCount === 999 || !checkRequiredFields();
-                submitButton.disabled = tShirtCount === 999
+                //submitButton.disabled = total === 999 || !checkRequiredFields();
+                submitButton.disabled = total === 999
             }
 
             document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);

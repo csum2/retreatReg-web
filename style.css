@@ -66,6 +66,21 @@ p, h3, label {
     outline: none;
 }
 
+/* Hint text styling */
+.hint {
+    font-size: 14px;
+    color: #d9534f; /* Red color for hints */
+    margin-top: -5px; /* Move the hint text closer to the input */
+    margin-bottom: 10px; /* Space between hint and next element */
+    display: none; /* Initially hidden */
+}
+
+/* Show hint text when input is required */
+input:invalid ~ .hint, 
+select:invalid ~ .hint {
+    display: block; /* Show hint text if the input is invalid */
+}
+
 /* T-shirt order table styling */
 #tshirtOrderTable {
     width: 100%;
