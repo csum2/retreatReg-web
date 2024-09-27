@@ -1,101 +1,173 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif; /* Change to a more professional and modern font */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    background-color: #eef2f7; /* Slightly lighter background for a more polished look */
+}
+
+/* Style for the horizontal line divider */
+.divider {
+    border: none;
+    border-top: 1px solid #ccc; /* Slightly darker for better contrast */
+    margin: 20px 0;
 }
 
 .container {
     width: 100%;
-    max-width: 400px;
+    max-width: 460px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background-color: #fff;
     position: relative; /* Allow positioning of the logout button */
+    max-height: 80vh; /* Set a maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
+/* Style for logout button */
 .logout-btn {
     position: absolute;
     z-index: 1;
-    top: 2px; /* Adjust as necessary */
-    right: 2px; /* Adjust as necessary */
-    background-color: red; /* Red color for the button */
-    color: yellow; /* Yellow text for the button */
+    top: 2px;
+    right: 10px;
+    background-color: #d9534f; /* Bootstrap's red color */
+    color: white;
     border: none;
     cursor: pointer;
-    font-size: 14px; /* Adjust font size */
-    padding: 8px 12px; /* Padding for the button */
-    border-radius: 4px; /* Rounded corners */
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 5px;
 }
 
-p {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Style for form instructions and event info */
+p, h3, label {
+    color: #333; /* Dark gray for readability */
+    font-size: 16px; /* Consistent font size */
+    margin-bottom: 10px;
 }
 
-#calculateFee {
-    padding: 10px 20px; /* Adjust padding for a smaller button */
-    width: auto; /* Ensure the width is adjusted to the content */
-    margin-left: auto; /* Push the calculate button to the right */
-}
-
-#submitForm, #clearInput {
-    width: 100%; /* Keep other buttons full width */
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 10px 0;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-/* Add hover effect for enabled button */
-.btn-enabled:hover {
-    background-color: #45a049; /* Darker green on hover */
-}
-
+/* Style for input fields */
 .container input {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+/* Input fields: change border on focus */
+.container input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Style for select elements */
+.container select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     box-sizing: border-box;
     font-size: 16px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.3s;
 }
 
-.container button {
+.container select:focus {
+    border-color: #45a049;
+    outline: none;
+}
+
+/* Table styling for T-shirt order */
+#tshirtOrderTable {
     width: 100%;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+#tshirtOrderTable th, #tshirtOrderTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #555; /* Darker font color for table content */
+}
+
+#tshirtOrderTable th:first-child,
+#tshirtOrderTable td:first-child {
+    width: 35%;
+}
+
+#tshirtOrderTable th:nth-child(2),
+#tshirtOrderTable td:nth-child(2) {
+    width: 40px;
+    text-align: center;
+}
+
+#tshirtOrderTable th:nth-child(3), #tshirtOrderTable td:nth-child(3) {
+    width: 38%;
+}
+
+#tshirtOrderTable th:nth-child(4), #tshirtOrderTable td:nth-child(4) {
+    width: 30%;
+}
+
+/* Button styling */
+button {
+    width: 100%;
+    padding: 14px;
     font-size: 16px;
     margin: 10px 0;
-    border-radius: 4px;
-    transition: background-color 0.3s; /* Add transition for smooth color change */
-    background-color: #4CAF50; /* Green for enabled button */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    border: none;
+}
+
+/* Button styles when active */
+button:active {
+    transform: scale(0.98);
+}
+
+/* Hover and enabled states */
+button#calculateFee:hover,
+button#submitForm:hover {
+    background-color: #45a049;
+}
+
+button#calculateFee {
+    background-color: #4CAF50;
     color: white;
 }
 
-/* Styles for select elements */
-.container select {
-    width: 100%; /* Full width */
-    padding: 12px; /* Same padding as input fields */
-    margin: 10px 0; /* Consistent margin */
-    box-sizing: border-box; /* Include padding in total width */
-    font-size: 16px; /* Consistent font size */
-    border: 2px solid #4CAF50; /* Green border to match buttons */
-    border-radius: 4px; /* Rounded corners */
-    background-color: #fff; /* White background */
-    transition: border-color 0.3s; /* Smooth transition for border color */
+button#submitForm:disabled {
+    background-color: #d3d3d3;
+    color: darkgray;
+    cursor: not-allowed;
 }
 
-/* Change border color on focus */
-.container select:focus {
-    border-color: #45a049; /* Darker green on focus */
-    outline: none; /* Remove default outline */
+/* Style for the total fee section */
+#totalFee {
+    font-weight: bold;
+    color: #000;
+    font-size: 18px;
+}
+
+/* Styles for event information paragraphs */
+#eventInfo1, #eventInfo2 {
+    font-family: 'Georgia', serif; /* Elegant font type */
+    font-size: 16px; /* Increased font size for readability */
+    color: #333; /* Dark gray color for a professional look */
+    line-height: 1.6; /* Improved line height for better readability */
+    margin: 10px 0; /* Margin for spacing */
+    padding: 10px; /* Padding for a better visual effect */
+    border-left: 4px solid #4CAF50; /* Green left border for emphasis */
+    background-color: #f9f9f9; /* Light background color for contrast */
+    border-radius: 5px; /* Rounded corners for a softer look */
 }
