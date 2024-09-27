@@ -13,19 +13,18 @@
     <div class="container">
         <h2>Retreat Registration Form</h2>
         <p id="eventInfo1">
-            <!-- Fill in the content for event information later --> 
-            Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999.  Besides, each person has to pay for a meal plan of $200.  The meal plan includes two meals per day for two days.  There are no partial meal plans available.
+            Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999. Besides, each person has to pay for a meal plan of $200. The meal plan includes two meals per day for two days. There are no partial meal plans available.
         </p>
         
         <label for="familyCount">Number of families in the unit:</label>
-        <select id="familyCount">
+        <select id="numFamilies">
             <option value="1">1</option>
             <option value="2">2</option>
         </select>
 
         <h3>Room 1</h3>
         <input type="text" id="name1" placeholder="Name 1" required>
-        <input type="text" id="name2" placeholder="Name 2" required>
+        <input type="text" id="name2" placeholder="Name 2">
 
         <h3>Room 2</h3>
         <input type="text" id="name3" placeholder="Name 3">
@@ -76,6 +75,7 @@
                         </select>
                     </td>
                 </tr>
+                <!-- Repeat for rows 2, 3, and 4 as needed -->
                 <tr>
                     <td>2</td>
                     <td>
@@ -160,6 +160,7 @@
                         </select>
                     </td>
                 </tr>
+
             </tbody>
         </table>
 
@@ -173,9 +174,35 @@
     </div>
 
     <script>
+        const numFamiliesSelect = document.getElementById('numFamilies');
+        const nameInputs = [document.getElementById('name1'), document.getElementById('name2'), document.getElementById('name3'), document.getElementById('name4')];
         const submitButton = document.getElementById('submitForm');
         const qtySelects = document.querySelectorAll('.qtySelect');
 
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+
+            function updateNameFields() {
+                const numFamilies = parseInt(numFamiliesSelect.value);
+                nameInputs[0].required = true;
+                nameInputs[1].required = false;
+                nameInputs[2].required = (numFamilies === 2);
+                nameInputs[3].required = false;
+            }
+
+            numFamiliesSelect.addEventListener('change', updateNameFields);
+
+            form.addEventListener('submit', function(event) {
+                if (!nameInputs[0].checkValidity() || (numFamiliesSelect.value == '2' && !nameInputs[2].checkValidity())) {
+                    event.preventDefault();
+                    alert('Please fill in the required fields.');
+                }
+            });
+
+            // Initialize the form on page load
+            updateNameFields();
+        });
+        
         // Function to calculate total fee
         function calculateTotalFee() {
             let total = 0;
@@ -185,8 +212,6 @@
             });
 
             document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
-
-            // Enable submit button if total is greater than 0, otherwise disable it
             submitButton.disabled = total === 0;
         }
 
@@ -194,11 +219,27 @@
 
         // Clear form
         document.getElementById('clearInput').addEventListener('click', () => {
-            document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
-                select.selectedIndex = 0;
+            // Clear name inputs
+            nameInputs.forEach(input => {
+                input.value = ''; // Clear the input value
             });
+
+            // Reset family count to default
+            numFamiliesSelect.selectedIndex = 0; // Reset to the first option (1 family)
+
+            // Reset select elements
+            document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
+                select.selectedIndex = 0; // Reset to the first option
+            });
+
+            // Reset total fee
             document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
+
+            // Disable the submit button
             submitButton.disabled = true;
+
+            // Re-initialize the name fields based on the reset number of families
+            updateNameFields();
         });
 
         document.getElementById('submitForm').addEventListener('click', () => {
