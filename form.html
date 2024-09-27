@@ -24,13 +24,13 @@
 
         <h3>Room 1</h3>
         <input type="text" id="name1" placeholder="Name 1" required>
-        <span class="hint" id="hintName1">Required for all families</span>
+        <span class="hint" id="hintName1">Name 1 is equired</span>
         <input type="text" id="name2" placeholder="Name 2">
         <span class="hint" id="hintName2" style="display: none;">Optional</span>
 
         <h3>Room 2</h3>
         <input type="text" id="name3" placeholder="Name 3">
-        <span class="hint" id="hintName3" style="display: none;">Required if 2 families</span>
+        <span class="hint" id="hintName3" style="display: none;">Name 3 is required if 2 families</span>
         <input type="text" id="name4" placeholder="Name 4">
         <span class="hint" id="hintName4" style="display: none;">Optional</span>
 
@@ -180,6 +180,52 @@
     </div>
 
     <script>
+        function checkLoginStatus() {
+            /* TODO comment out for unit test
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+            //24 hours timeout
+            if (!loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
+                Swal.fire({
+                    title: 'Session Expired!',
+                    text: 'You have been logged out due to inactivity. Please log in again.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = 'index.html';
+                });
+                return false;
+            }
+            */
+            return true;
+        }
+
+        // Load existing user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData && userData.names) {
+                document.getElementById('name1').value = userData.names[0] || '';
+                document.getElementById('name2').value = userData.names[1] || '';
+                document.getElementById('name3').value = userData.names[2] || '';
+                document.getElementById('name4').value = userData.names[3] || '';
+            }
+        }
+
+        window.onpopstate = function(event) {
+            window.history.pushState(null, document.title, window.location.href);
+        };
+
+        // Check login status on page load
+        window.onload = () => {
+            if (!checkLoginStatus()) return;
+
+            // Prevent going back to this page
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+            };
+            loadUserData(); // Load user data from localStorage
+        };
+        
         const numFamiliesSelect = document.getElementById('numFamilies');
         const nameInputs = [
             document.getElementById('name1'), 
@@ -217,24 +263,37 @@
             // Disable submit button initially
             submitButton.disabled = true;
 
-            // Enable/disable submit button based on required fields
+            // Enable/disable submit button based input fields
             nameInputs.forEach(input => {
                 input.addEventListener('input', function() {
-                    submitButton.disabled = !checkRequiredFields();
+                    submitButton.disabled = true;
+                });
+            });
+            
+            // Enable/disable submit button based on T-shirt qty changed
+            qtySelects.forEach(change => {
+                change.addEventListener('change', function() {
+                    submitButton.disabled = true;
                 });
             });
 
             // Calculate Total Fee
             function calculateTotalFee() {
-                let total = 999; // Fixed fee
+                let total = 999; // Fixed fee for a residence
                 let tShirtCount = 0;
 
+                // Add meal plan fee of $200 for each person
+                nameInputs.forEach(input => {
+                    if (input.value.trim() !== '') { // Check for non-blank input
+                        total += 200;
+                    }
+                });
+
+                // Add T-shirt order qty amount $20 / pcs
                 qtySelects.forEach(select => {
                     tShirtCount += parseInt(select.value);
                 });
-
                 total += tShirtCount * 20; // Add T-shirt costs
-                // Add meal plan cost per name entered
 
                 document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
                 //submitButton.disabled = total === 999 || !checkRequiredFields();
@@ -269,6 +328,8 @@
             });
 
             document.getElementById('submitForm').addEventListener('click', () => {
+                if (!checkLoginStatus()) return;
+
                 if (!checkRequiredFields()) {
                     let missingFields = [];
                     if (!nameInputs[0].checkValidity()) missingFields.push('Name 1');
@@ -286,16 +347,25 @@
                         title: 'Order Submitted',
                         text: 'Your order has been submitted successfully.',
                         confirmButtonText: 'OK'
+                    }).then(()=>{
+                        //TODO disable for unit test
+                        //clearStorage();
+                        //window.location.href = 'index.html';
                     });
                 }
             });
 
             document.getElementById('logoutBtn').addEventListener('click', () => {
+                clearStorage();
+                window.location.href = 'index.html';
+            });
+
+            // Clear storage
+            function clearStorage() {
                 localStorage.removeItem('loginTimestamp');
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('userData');
-                window.location.href = 'index.html';
-            });
+            }
 
             // Initial setup
             updateNameFields();
