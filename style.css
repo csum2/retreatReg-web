@@ -103,17 +103,17 @@ select:invalid ~ .hint {
 
 #tshirtOrderTable th:nth-child(2),
 #tshirtOrderTable td:nth-child(2) {
-    width: 50%; /* Widest column for color dropdown */
+    width: 40%; /* Widest column for color dropdown */
 }
 
 #tshirtOrderTable th:nth-child(3),
 #tshirtOrderTable td:nth-child(3) {
-    width: 20%; /* Size column with enough width for 'WW' */
+    width: 25%; 
 }
 
 #tshirtOrderTable th:nth-child(4),
 #tshirtOrderTable td:nth-child(4) {
-    width: 20%; /* Qty column with enough width for 'WW' */
+    width: 25%; 
 }
 
 /* Button styling */

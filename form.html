@@ -38,7 +38,7 @@
 
         <label>T-shirt Order details:</label>
         <p id="eventInfo2">
-            The price for each T-shirt is $20. Please select the color, size, and quantity.
+            The price for each T-shirt is $20.  If you wish to place an order, select the colour, size, and quantity.
         </p>
         
         <table id="tshirtOrderTable">
@@ -79,7 +79,6 @@
                         </select>
                     </td>
                 </tr>
-                <!-- Repeat for rows 2, 3, and 4 as needed -->
                 <tr>
                     <td>2</td>
                     <td>
@@ -269,7 +268,7 @@
                     submitButton.disabled = true;
                 });
             });
-            
+
             // Enable/disable submit button based on T-shirt qty changed
             qtySelects.forEach(change => {
                 change.addEventListener('change', function() {
