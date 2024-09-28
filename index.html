@@ -157,15 +157,53 @@
                 localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
                 const userDataJSON = JSON.stringify(userData);
                 console.log(`User data fetched: ${userDataJSON}`);
+                
+                //const paidFlag = (JSON.parse(userDataJSON)).paidFlag;
+                console.log(`systemOpen fetched: ${userData.systemOpen}`);
+
+                // Cannot update if Paid already or system not open
+                const isPaid = userData.paidFlag.toLowerCase() === 'y';
+                const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
+                const action = isPaid || !isSystemOpen ? 'only review' : 'update';
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Login Successful',
-                    text: 'You have successfully logged in!',
+                    text: `Welcom back!  You can ${action} your submitted info now.`,
                     confirmButtonText: 'Proceed',
                 }).then(() => {
                     window.location.href = 'form.html';
                 });
+            } else if (response.status === 404) {
+                const { userData } = await response.json();
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loginTimestamp', new Date().getTime());
+                localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
+                const userDataJSON = JSON.stringify(userData);
+                console.log(`User data fetched: ${userDataJSON}`);
+                console.log(`User data not found. Assumming a new user`);
+                console.log(`systemOpen fetched: ${userData.systemOpen}`);
+
+                // Cannot register if system not open
+                const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
+
+                if (isSystemOpen) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Successful',
+                        text: 'Welcome to the Registration System!',
+                        confirmButtonText: 'Proceed',
+                    }).then(() => {
+                        window.location.href = 'form.html';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'System closed',
+                        text: 'The registration date has passed',
+                        confirmButtonText: 'Proceed',
+                    });
+                }
             } else {
                 Swal.fire({
                     icon: 'error',
