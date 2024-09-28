@@ -174,6 +174,7 @@
                 }).then(() => {
                     window.location.href = 'form.html';
                 });
+            // new user without real data except the system open flag
             } else if (response.status === 404) {
                 const { userData } = await response.json();
                 localStorage.setItem('isLoggedIn', 'true');
@@ -200,7 +201,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'System closed',
-                        text: 'The registration date has passed',
+                        text: 'You cannot do registration now',
                         confirmButtonText: 'Proceed',
                     });
                 }
