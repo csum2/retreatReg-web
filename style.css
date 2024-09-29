@@ -39,6 +39,7 @@ body {
     font-size: 14px;
     padding: 10px 15px;
     border-radius: 5px;
+    z-index: 2;
 }
 
 /* General text and labels */
