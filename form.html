@@ -16,6 +16,8 @@
             Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999. Besides, each person has to pay for a meal plan of $200. The meal plan includes two meals per day for two days. There are no partial meal plans available.
         </p>
         
+        <input type="tel" id="phone" placeholder="Contact Mobile 123-456-7890" required>
+        <span class="hint" id="hintPhone1">Contact mobile number is required</span>
         <label for="numFamilies">Number of families in the unit:</label>
         <select id="numFamilies">
             <option value="1">1</option>
@@ -24,7 +26,7 @@
 
         <h3>Room 1</h3>
         <input type="text" id="name1" placeholder="Name 1" required>
-        <span class="hint" id="hintName1">Name 1 is equired</span>
+        <span class="hint" id="hintName1">Name 1 is required</span>
         <input type="text" id="name2" placeholder="Name 2">
         <span class="hint" id="hintName2" style="display: none;">Optional</span>
 
@@ -225,6 +227,7 @@
             loadUserData(); // Load user data from localStorage
         };
         
+        const phoneInput = document.getElementById('phone');
         const numFamiliesSelect = document.getElementById('numFamilies');
         const nameInputs = [
             document.getElementById('name1'), 
@@ -244,19 +247,31 @@
                 nameInputs[3].required = false; // Name 4 is not required
                 
                 // Update hints based on the number of families
-                document.getElementById('hintName1').style.display = 'inline'; // Always show
-                document.getElementById('hintName2').style.display = 'none'; // Hide Name 2 hint
-                document.getElementById('hintName3').style.display = (numFamilies === 2) ? 'inline' : 'none'; // Show Name 3 hint if 2 families
-                document.getElementById('hintName4').style.display = 'none'; // Hide Name 4 hint
+                document.getElementById('hintName3').style.display = (numFamilies === 2 && nameInputs[2].value.trim() === "") ? 'inline' : 'none'; // Show Name 3 hint if 2 families
             }
 
             numFamiliesSelect.addEventListener('change', updateNameFields);
 
+            // Function to validate phone number format
+            function validatePhone() {
+                var phoneValue = phoneInput.value;
+                
+                // Regular expression for validating North American phone numbers
+                var phonePattern = /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
+                
+                if (phonePattern.test(phoneValue)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             // Function to check if all required fields are filled
             function checkRequiredFields() {
+                const isPhoneValid = validatePhone();
                 const isName1Valid = nameInputs[0].checkValidity();
                 const isName3Valid = numFamiliesSelect.value == '2' ? nameInputs[2].checkValidity() : true; // Only check Name 3 if 2 families
-                return isName1Valid && isName3Valid;
+                return isPhoneValid && isName1Valid && isName3Valid;
             }
 
             // Disable submit button initially
@@ -266,6 +281,13 @@
             nameInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     submitButton.disabled = true;
+                    if (input === nameInputs[2]) {
+                        if (nameInputs[2].value.trim() === "" && parseInt(numFamiliesSelect.value) === 2) {
+                            document.getElementById('hintName3').style.display = "inline"
+                        } else {
+                            document.getElementById('hintName3').style.display = "none"
+                        }
+                    }
                 });
             });
 
@@ -331,13 +353,14 @@
 
                 if (!checkRequiredFields()) {
                     let missingFields = [];
+                    if (!validatePhone()) missingFields.push('Contact mobile');
                     if (!nameInputs[0].checkValidity()) missingFields.push('Name 1');
                     if (numFamiliesSelect.value === '2' && !nameInputs[2].checkValidity()) missingFields.push('Name 3');
 
                     Swal.fire({
                         icon: 'error',
-                        title: 'Missing Fields',
-                        text: `Please fill in the following fields: ${missingFields.join(', ')}`,
+                        title: 'Missing / Invalid Fields',
+                        text: `Please check out the field(s): ${missingFields.join(', ')}`,
                         confirmButtonText: 'OK'
                     });
                 } else {
