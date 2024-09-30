@@ -181,6 +181,22 @@
     </div>
 
     <script>
+        // Determine the environment
+        let baseUrl;
+
+        if (window.location.hostname === 'localhost') {
+            baseUrl = 'http://localhost:3000'; // Local development
+        } else if (window.location.hostname === '192.168.1.117') {
+            baseUrl = 'http://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
+        } else {
+            baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
+        }
+
+        const saveOrUpdateUrl = `${baseUrl}/saveOrUpdate`;
+        var userDataEmail;
+        var userDataRegDate;
+        var userDataUpdTimestamp;
+
         function checkLoginStatus() {
             /* TODO comment out for unit test
             const loginTimestamp = localStorage.getItem('loginTimestamp');
@@ -212,6 +228,7 @@
             const userDataJSON = JSON.stringify(userData);
             console.log(`User data loaded: ${userDataJSON}`);
             if (userData) {
+                userDataEmail = userData.email;
                 document.getElementById('phone').value = userData.mobile || '';
 
                 const familySelect = document.getElementById('numFamilies');
@@ -274,9 +291,6 @@
             loadUserData(); // Load user data from localStorage
         };
         
-        var userDataRegDate;
-        var userDataUpdTimestamp;
-
         const phoneInput = document.getElementById('phone');
         const numFamiliesSelect = document.getElementById('numFamilies');
         const nameInputs = [
@@ -402,6 +416,76 @@
                 updateNameFields();
             });
 
+            // Post the form inputs to the backend
+            function saveToBackend() {
+                // Gather data and build the JSON object
+                const email = userDataEmail;
+                const numOfFam = document.getElementById("numFamilies").value;
+                const names = [
+                document.getElementById("name1").value,
+                document.getElementById("name2").value,
+                document.getElementById("name3").value,
+                document.getElementById("name4").value
+                ];
+                const mobile = document.getElementById("phone").value;
+
+                // Gather T-shirt orders
+                const tshirts = [];
+                for (let i = 1; i <= 4; i++) {
+                tshirts.push({
+                    color: document.getElementById("colorSelect" + i).value,
+                    size: document.getElementById("sizeSelect" + i).value,
+                    qty: document.getElementById("qtySelect" + i).value
+                });
+                }
+
+                const totalFee = document.getElementById("feeAmount").textContent;
+
+                // Build the JSON object
+                const formData = {
+                    email: email,
+                    numOfFam: parseInt(numOfFam),
+                    names: names,
+                    mobile: mobile,
+                    tshirts: tshirts,
+                    totalFee: totalFee
+                };
+                console.log('Form data json:', JSON.stringify(formData));
+                // Send the POST request to /saveOrUpdate
+                fetch(saveOrUpdateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Post save/update success:', data);
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'Order Submitted',
+                            text: 'Your order has been submitted successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(()=>{
+                            //TODO disable for unit test
+                            //clearStorage();
+                            //window.location.href = 'index.html';
+                        }
+                    );
+                })
+                .catch((error) => {
+                // Handle any errors
+                    console.error('Post save/update Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'System error',
+                        text: 'There was an error submitting the form. Please retry',
+                        confirmButtonText: 'Proceed',
+                    });
+                });
+            }
+
             document.getElementById('submitForm').addEventListener('click', () => {
                 if (!checkLoginStatus()) return;
 
@@ -418,16 +502,8 @@
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Order Submitted',
-                        text: 'Your order has been submitted successfully.',
-                        confirmButtonText: 'OK'
-                    }).then(()=>{
-                        //TODO disable for unit test
-                        //clearStorage();
-                        //window.location.href = 'index.html';
-                    });
+                    // Post the record to the backend
+                    saveToBackend();
                 }
             });
 

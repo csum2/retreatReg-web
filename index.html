@@ -174,7 +174,7 @@
                 }).then(() => {
                     window.location.href = 'form.html';
                 });
-            // new user without real data except the system open flag
+            // new user without real data except the system open flag & email
             } else if (response.status === 404) {
                 const { userData } = await response.json();
                 localStorage.setItem('isLoggedIn', 'true');
