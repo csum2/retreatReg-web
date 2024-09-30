@@ -253,6 +253,8 @@
                 document.getElementById('feeAmount').textContent =
                     (userData.totalFee !== undefined && userData.totalFee !== null) ? parseFloat(userData.totalFee).toFixed(2) : '0.00';
 
+                userDataRegDate = userData.regDate;
+                userDataUpdTimestamp = userData.updTimestamp;
             }
         }
 
@@ -273,7 +275,7 @@
         };
         
         var userDataRegDate;
-        var userDataUpdDate;
+        var userDataUpdTimestamp;
 
         const phoneInput = document.getElementById('phone');
         const numFamiliesSelect = document.getElementById('numFamilies');
