@@ -11,7 +11,7 @@
 <body>
     <button class="logout-btn" id="logoutBtn" style="width: auto;">&#10006;</button>
     <div class="container">
-        <h2>Retreat Registration Form</h2>
+        <h2>Cornerstone Fellowship<br>Retreat Registration Form</h2>
         <p id="eventInfo1">
             Please note that no matter how many persons (up to four) stay in the unit, you will pay the resident a fixed fee of $999. Besides, each person has to pay for a meal plan of $200. The meal plan includes two meals per day for two days. There are no partial meal plans available.
         </p>
@@ -20,7 +20,7 @@
         <span class="hint" id="hintPhone1">Contact mobile number is required</span>
         <label for="numFamilies">Number of families in the unit:</label>
         <select id="numFamilies">
-            <option value="1">1</option>
+            <option value="1" selected>1</option>
             <option value="2">2</option>
         </select>
 
@@ -56,7 +56,7 @@
                 <tr>
                     <td>1</td>
                     <td>
-                        <select class="colorSelect">
+                        <select id="colorSelect1" class="colorSelect">
                             <option value="Black" selected>Black</option>
                             <option value="White">White</option>
                             <option value="Yellow">Yellow</option>
@@ -64,7 +64,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="sizeSelect">
+                        <select id="sizeSelect1" class="sizeSelect">
                             <option value="S" selected>S</option>
                             <option value="M">M</option>
                             <option value="L">L</option>
@@ -72,7 +72,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="qtySelect">
+                        <select id="qtySelect1" class="qtySelect">
                             <option value="0" selected>0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -84,7 +84,7 @@
                 <tr>
                     <td>2</td>
                     <td>
-                        <select class="colorSelect">
+                        <select id="colorSelect2" class="colorSelect">
                             <option value="Black" selected>Black</option>
                             <option value="White">White</option>
                             <option value="Yellow">Yellow</option>
@@ -92,7 +92,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="sizeSelect">
+                        <select id="sizeSelect2" class="sizeSelect">
                             <option value="S" selected>S</option>
                             <option value="M">M</option>
                             <option value="L">L</option>
@@ -100,7 +100,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="qtySelect">
+                        <select id="qtySelect2" class="qtySelect">
                             <option value="0" selected>0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -112,7 +112,7 @@
                 <tr>
                     <td>3</td>
                     <td>
-                        <select class="colorSelect">
+                        <select id="colorSelect3" class="colorSelect">
                             <option value="Black" selected>Black</option>
                             <option value="White">White</option>
                             <option value="Yellow">Yellow</option>
@@ -120,7 +120,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="sizeSelect">
+                        <select id="sizeSelect3" class="sizeSelect">
                             <option value="S" selected>S</option>
                             <option value="M">M</option>
                             <option value="L">L</option>
@@ -128,7 +128,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="qtySelect">
+                        <select id="qtySelect3" class="qtySelect">
                             <option value="0" selected>0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -140,7 +140,7 @@
                 <tr>
                     <td>4</td>
                     <td>
-                        <select class="colorSelect">
+                        <select id="colorSelect4" class="colorSelect">
                             <option value="Black" selected>Black</option>
                             <option value="White">White</option>
                             <option value="Yellow">Yellow</option>
@@ -148,7 +148,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="sizeSelect">
+                        <select id="sizeSelect4" class="sizeSelect">
                             <option value="S" selected>S</option>
                             <option value="M">M</option>
                             <option value="L">L</option>
@@ -156,7 +156,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="qtySelect">
+                        <select id="qtySelect4" class="qtySelect">
                             <option value="0" selected>0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -172,7 +172,7 @@
         </p>
 
         <p style="display: flex; justify-content: space-between; align-items: center;">
-            <span id="totalFee">Total Fee: $0.00</span>
+            <span id="totalFee">Total Fee: $<span id="feeAmount">0.00</span></span>
             <button id="calculateFee" style="width: auto;">Calculate</button>
         </p>
 
@@ -200,14 +200,59 @@
             return true;
         }
 
+        // Function to set the selected value of a pulldown menu
+        function setSelectedValue(selectElement, value) {
+            if (value !== undefined && value !== null) {
+                selectElement.value = value;
+            }
+        }
         // Load existing user data from localStorage
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData && userData.names) {
+            const userDataJSON = JSON.stringify(userData);
+            console.log(`User data loaded: ${userDataJSON}`);
+            if (userData) {
+                document.getElementById('phone').value = userData.mobile || '';
+
+                const familySelect = document.getElementById('numFamilies');
+                setSelectedValue(familySelect, userData.numOfFam);
+
                 document.getElementById('name1').value = userData.names[0] || '';
                 document.getElementById('name2').value = userData.names[1] || '';
                 document.getElementById('name3').value = userData.names[2] || '';
                 document.getElementById('name4').value = userData.names[3] || '';
+
+                const colorSelect1 = document.getElementById('colorSelect1');
+                setSelectedValue(colorSelect1, userData.tshirts[0].color); 
+                const sizeSelect1 = document.getElementById('sizeSelect1');
+                setSelectedValue(sizeSelect1, userData.tshirts[0].size); 
+                const qtySelect1 = document.getElementById('qtySelect1');
+                setSelectedValue(qtySelect1, userData.tshirts[0].qty); 
+
+                const colorSelect2 = document.getElementById('colorSelect2');
+                setSelectedValue(colorSelect2, userData.tshirts[1].color); 
+                const sizeSelect2 = document.getElementById('sizeSelect2');
+                setSelectedValue(sizeSelect2, userData.tshirts[1].size); 
+                const qtySelect2 = document.getElementById('qtySelect2');
+                setSelectedValue(qtySelect2, userData.tshirts[1].qty); 
+
+                const colorSelect3 = document.getElementById('colorSelect3');
+                setSelectedValue(colorSelect3, userData.tshirts[2].color); 
+                const sizeSelect3 = document.getElementById('sizeSelect3');
+                setSelectedValue(sizeSelect3, userData.tshirts[2].size); 
+                const qtySelect3 = document.getElementById('qtySelect3');
+                setSelectedValue(qtySelect3, userData.tshirts[2].qty); 
+
+                const colorSelect4 = document.getElementById('colorSelect4');
+                setSelectedValue(colorSelect4, userData.tshirts[3].color); 
+                const sizeSelect4 = document.getElementById('sizeSelect4');
+                setSelectedValue(sizeSelect4, userData.tshirts[3].size); 
+                const qtySelect4 = document.getElementById('qtySelect4');
+                setSelectedValue(qtySelect4, userData.tshirts[3].qty); 
+
+                document.getElementById('feeAmount').textContent =
+                    (userData.totalFee !== undefined && userData.totalFee !== null) ? parseFloat(userData.totalFee).toFixed(2) : '0.00';
+
             }
         }
 
@@ -227,6 +272,9 @@
             loadUserData(); // Load user data from localStorage
         };
         
+        var userDataRegDate;
+        var userDataUpdDate;
+
         const phoneInput = document.getElementById('phone');
         const numFamiliesSelect = document.getElementById('numFamilies');
         const nameInputs = [
@@ -316,7 +364,7 @@
                 });
                 total += tShirtCount * 20; // Add T-shirt costs
 
-                document.getElementById('totalFee').textContent = `Total Fee: $${total.toFixed(2)}`;
+                document.getElementById('feeAmount').textContent = `${total.toFixed(2)}`;
                 //submitButton.disabled = total === 999 || !checkRequiredFields();
                 submitButton.disabled = total === 999
             }
@@ -325,6 +373,9 @@
 
             // Clear form
             document.getElementById('clearInput').addEventListener('click', () => {
+                // clear mobile number
+                document.getElementById('phone').value = '';
+
                 // Clear name inputs
                 nameInputs.forEach(input => {
                     input.value = ''; // Clear the input value
@@ -334,12 +385,13 @@
                 numFamiliesSelect.selectedIndex = 0; // Reset to the first option (1 family)
 
                 // Reset select elements
-                document.querySelectorAll('.colorSelect, .sizeSelect, .qtySelect').forEach(select => {
+                document.querySelectorAll(' .colorSelect, .sizeSelect, .qtySelect').
+                    forEach(select => {
                     select.selectedIndex = 0; // Reset to the first option
                 });
 
                 // Reset total fee
-                document.getElementById('totalFee').textContent = 'Total Fee: $0.00';
+                document.getElementById('feeAmount').textContent = '0.00';
 
                 // Disable the submit button
                 submitButton.disabled = true;

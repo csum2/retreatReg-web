@@ -213,17 +213,16 @@
                     confirmButtonText: 'OK'
                 });
             }
-        } catch (error) {
-            console.error('Error during login:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Something went wrong. Please try again later.',
-                confirmButtonText: 'OK'
-            });
-        }
-    });
-
+        }   catch (error) {
+                console.error('Error during login:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
 
         function disableRequestButton(seconds) {
             requestOtpBtn.disabled = true;
