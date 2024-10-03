@@ -24,15 +24,16 @@
     <script>
         // Determine the environment
         let baseUrl;
-
+        baseUrl = 'https://retreatreg-rest.fly.dev/';
+/*
         if (window.location.hostname === 'localhost') {
             baseUrl = 'http://localhost:3000'; // Local development
         } else if (window.location.hostname === '192.168.1.117') {
             baseUrl = 'http://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
         } else {
-            baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
+            baseUrl = 'https://retreatreg-rest.fly.dev/'; // Production URL (replace with actual URL)
         }
-
+*/
         const sendOtpUrl = `${baseUrl}/sendOTP`;
         const verifyOtpUrl = `${baseUrl}/verifyOTP`;
         const requestOtpBtn = document.getElementById('requestOtp');
