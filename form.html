@@ -183,7 +183,7 @@
     <script>
         // Determine the environment
         let baseUrl;
-        baseUrl = 'https://retreatreg-rest.fly.dev/';
+        baseUrl = 'https://retreatreg-rest.fly.dev';
 /*
         if (window.location.hostname === 'localhost') {
             baseUrl = 'http://localhost:3000'; // Local development
@@ -522,6 +522,14 @@
 
             // Initial setup
             updateNameFields();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
+               (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
