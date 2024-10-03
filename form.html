@@ -470,8 +470,8 @@
                             confirmButtonText: 'OK'
                         }).then(()=>{
                             //TODO disable for unit test
-                            //clearStorage();
-                            //window.location.href = 'index.html';
+                            clearStorage();
+                            window.location.href = 'index.html';
                         }
                     );
                 })
@@ -523,7 +523,7 @@
             // Initial setup
             updateNameFields();
         });
-        
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || 
                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
