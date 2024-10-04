@@ -24,8 +24,8 @@
     <script>
         // Determine the environment
         let baseUrl;
-        //baseUrl = 'https://retreatreg-rest.fly.dev';
-
+        baseUrl = 'https://retreatreg-rest.fly.dev';
+/*
         if (window.location.hostname === 'localhost') {
             baseUrl = 'http://localhost:3000'; // Local development
         } else if (window.location.hostname === '192.168.1.117') {
@@ -33,30 +33,15 @@
         } else {
             baseUrl = 'https://retreatreg-rest.fly.dev'; // Production URL (replace with actual URL)
         }
+*/
+        // Detect if the user is on a mobile device
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         const sendOtpUrl = `${baseUrl}/sendOTP`;
         const verifyOtpUrl = `${baseUrl}/verifyOTP`;
         const requestOtpBtn = document.getElementById('requestOtp');
         const loginBtn = document.getElementById('login');
         const otpField = document.getElementById('otp');
-
-        // Check if user is logged in
-        checkLoginStatus();
-
-        function checkLoginStatus() {
-            const loginTimestamp = localStorage.getItem('loginTimestamp');
-            if (loginTimestamp) {
-                const now = new Date().getTime();
-                //const oneDay = 24 * 60 * 60 * 1000; // 1 day in milliseconds
-                const oneDay = 60 * 1000; // unit test 1 minute in milliseconds
-                if (now - loginTimestamp > oneDay) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('loginTimestamp');
-                } else {
-                    window.location.href = 'form.html'; // Redirect to the input form page
-                }
-            }
-        }
 
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -156,7 +141,7 @@
 
                 if (response.ok) {
                     const { userData } = await response.json();
-                    localStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('loginTimestamp', new Date().getTime());
                     localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
                     const userDataJSON = JSON.stringify(userData);
@@ -181,7 +166,7 @@
                 // new user without real data except the system open flag & email
                 } else if (response.status === 404) {
                     const { userData } = await response.json();
-                    localStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('loginTimestamp', new Date().getTime());
                     localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
                     const userDataJSON = JSON.stringify(userData);
@@ -251,9 +236,12 @@
             requestOtpBtn.innerText = 'Request One Time Password (OTP)';
         }
 
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+        if (!isMobile) {
+            // Disable right-click only on non-mobile devices
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+            }, false);
+        }
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || 

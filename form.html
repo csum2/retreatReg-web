@@ -198,8 +198,30 @@
         var userDataRegDate;
         var userDataUpdTimestamp;
 
+        if (!sessionStorage.getItem("isLoggedIn")) {
+            // Redirect to login page if not logged in
+            clearStorage();
+            window.location.href = "index.html";
+        }
+        // Jump back to login page if the user email is not saved previously
+        const uData = localStorage.getItem('userData');
+        if (uData === null || uData === "") {
+            console.log("User data is missing in the local storage.");
+            clearStorage();
+            window.location.href = "index.html";
+        } else {
+            console.log("uData:", uData);
+        }
+
+        // Clear storage
+        function clearStorage() {
+            localStorage.removeItem('loginTimestamp');
+            sessionStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userData');
+        }
+
         function checkLoginStatus() {
-            /* TODO comment out for unit test
+            /* TODO comment out for unit test */
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             //24 hours timeout
             if (!loginTimestamp || (Date.now() - loginTimestamp) > 86400000) {
@@ -213,7 +235,6 @@
                 });
                 return false;
             }
-            */
             return true;
         }
 
@@ -469,7 +490,6 @@
                             text: 'Your registration has been submitted successfully.',
                             confirmButtonText: 'OK'
                         }).then(()=>{
-                            //TODO disable for unit test
                             clearStorage();
                             window.location.href = 'index.html';
                         }
@@ -512,13 +532,6 @@
                 clearStorage();
                 window.location.href = 'index.html';
             });
-
-            // Clear storage
-            function clearStorage() {
-                localStorage.removeItem('loginTimestamp');
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userData');
-            }
 
             // Initial setup
             updateNameFields();
