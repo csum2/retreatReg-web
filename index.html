@@ -91,6 +91,8 @@
                         title: 'OTP Sent',
                         text: 'OTP sent to your email',
                         confirmButtonText: 'OK'
+                    }).then(()=>{
+                        enableLoginButton();
                     });
                 } else {
                     Swal.fire({
@@ -100,6 +102,7 @@
                         confirmButtonText: 'Try Again'
                     });
                     enableRequestButton();
+                    enableLoginButton();
                 }
             } catch (error) {
                 console.error('Error requesting OTP:', error);
@@ -200,16 +203,18 @@
                         title: 'Invalid OTP',
                         text: 'The OTP you entered is incorrect. Please try again.',
                         confirmButtonText: 'OK'
+                    }).then(()=>{
+                        enableLoginButton();
                     });
                 }
             } catch (error) {
-                    console.error('Error during login:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong. Please try again later.',
-                        confirmButtonText: 'OK'
-                    });
+                console.error('Error during login:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
             } finally {
                 enableLoginButton();
             }
