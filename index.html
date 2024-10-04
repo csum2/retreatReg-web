@@ -24,8 +24,8 @@
     <script>
         // Determine the environment
         let baseUrl;
-        baseUrl = 'https://retreatreg-rest.fly.dev';
-/*
+        //baseUrl = 'https://retreatreg-rest.fly.dev';
+
         if (window.location.hostname === 'localhost') {
             baseUrl = 'http://localhost:3000'; // Local development
         } else if (window.location.hostname === '192.168.1.117') {
@@ -33,7 +33,7 @@
         } else {
             baseUrl = 'https://retreatreg-rest.fly.dev/'; // Production URL (replace with actual URL)
         }
-*/
+
         const sendOtpUrl = `${baseUrl}/sendOTP`;
         const verifyOtpUrl = `${baseUrl}/verifyOTP`;
         const requestOtpBtn = document.getElementById('requestOtp');
@@ -89,6 +89,7 @@
             }
 
             disableRequestButton(60);
+            disableLoginButton();
 
             try {
                 const response = await fetch(sendOtpUrl, {
@@ -124,104 +125,108 @@
                     confirmButtonText: 'OK'
                 });
                 enableRequestButton();
+            } finally {
+                enableLoginButton();
             }
         });
 
         // Login with OTP
         loginBtn.addEventListener('click', async () => {
-        const email = document.getElementById('email').value;
-        const otp = otpField.value;
-
-        if (!email || !otp) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Required fields',
-                text: 'Please enter both email and OTP',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        try {
-            const response = await fetch(verifyOtpUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, otp }),
-            });
-
-            if (response.ok) {
-                const { userData } = await response.json();
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('loginTimestamp', new Date().getTime());
-                localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
-                const userDataJSON = JSON.stringify(userData);
-                console.log(`User data fetched: ${userDataJSON}`);
-                
-                //const paidFlag = (JSON.parse(userDataJSON)).paidFlag;
-                console.log(`systemOpen fetched: ${userData.systemOpen}`);
-
-                // Cannot update if Paid already or system not open
-                const isPaid = userData.paidFlag.toLowerCase() === 'y';
-                const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
-                const action = isPaid || !isSystemOpen ? 'only review' : 'update';
-
+            const email = document.getElementById('email').value;
+            const otp = otpField.value;
+            disableLoginButton();
+            if (!email || !otp) {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Login Successful',
-                    text: `Welcom back!  You can ${action} your submitted info now.`,
-                    confirmButtonText: 'Proceed',
-                }).then(() => {
-                    window.location.href = 'form.html';
+                    icon: 'warning',
+                    title: 'Required fields',
+                    text: 'Please enter both email and OTP',
+                    confirmButtonText: 'OK'
                 });
-            // new user without real data except the system open flag & email
-            } else if (response.status === 404) {
-                const { userData } = await response.json();
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('loginTimestamp', new Date().getTime());
-                localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
-                const userDataJSON = JSON.stringify(userData);
-                console.log(`User data fetched: ${userDataJSON}`);
-                console.log(`User data not found. Assumming a new user`);
-                console.log(`systemOpen fetched: ${userData.systemOpen}`);
+                return;
+            }
 
-                // Cannot register if system not open
-                const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
+            try {
+                const response = await fetch(verifyOtpUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, otp }),
+                });
 
-                if (isSystemOpen) {
+                if (response.ok) {
+                    const { userData } = await response.json();
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loginTimestamp', new Date().getTime());
+                    localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
+                    const userDataJSON = JSON.stringify(userData);
+                    console.log(`User data fetched: ${userDataJSON}`);
+                    
+                    //const paidFlag = (JSON.parse(userDataJSON)).paidFlag;
+                    console.log(`systemOpen fetched: ${userData.systemOpen}`);
+
+                    // Cannot update if Paid already or system not open
+                    const isPaid = userData.paidFlag.toLowerCase() === 'y';
+                    const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
+                    const action = isPaid || !isSystemOpen ? 'only review' : 'update';
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Login Successful',
-                        text: 'Welcome to the Registration System!',
+                        text: `Welcom back!  You can ${action} your submitted info now.`,
                         confirmButtonText: 'Proceed',
                     }).then(() => {
                         window.location.href = 'form.html';
                     });
+                // new user without real data except the system open flag & email
+                } else if (response.status === 404) {
+                    const { userData } = await response.json();
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loginTimestamp', new Date().getTime());
+                    localStorage.setItem('userData', JSON.stringify(userData)); // Store userData
+                    const userDataJSON = JSON.stringify(userData);
+                    console.log(`User data fetched: ${userDataJSON}`);
+                    console.log(`User data not found. Assumming a new user`);
+                    console.log(`systemOpen fetched: ${userData.systemOpen}`);
+
+                    // Cannot register if system not open
+                    const isSystemOpen = userData.systemOpen.toLowerCase() === 'y';
+
+                    if (isSystemOpen) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Login Successful',
+                            text: 'Welcome to the Registration System!',
+                            confirmButtonText: 'Proceed',
+                        }).then(() => {
+                            window.location.href = 'form.html';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'System closed',
+                            text: 'You cannot do registration now',
+                            confirmButtonText: 'Proceed',
+                        });
+                    }
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'System closed',
-                        text: 'You cannot do registration now',
-                        confirmButtonText: 'Proceed',
+                        title: 'Invalid OTP',
+                        text: 'The OTP you entered is incorrect. Please try again.',
+                        confirmButtonText: 'OK'
                     });
                 }
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid OTP',
-                    text: 'The OTP you entered is incorrect. Please try again.',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }   catch (error) {
-                console.error('Error during login:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Something went wrong. Please try again later.',
-                    confirmButtonText: 'OK'
-                });
+            } catch (error) {
+                    console.error('Error during login:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
+            } finally {
+                enableLoginButton();
             }
         });
 
@@ -257,6 +262,17 @@
                 e.preventDefault();
             }
         });
+
+        // Helper functions to disable and enable Login button
+        function disableLoginButton() {
+            loginBtn.disabled = true;
+            loginBtn.innerText = 'Processing...';
+        }
+
+        function enableLoginButton(button) {
+            loginBtn.disabled = false;
+            loginBtn.innerText = 'Login';
+        }
     </script>
 </body>
 </html>
