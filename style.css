@@ -49,6 +49,16 @@ p, h3, label {
     margin-bottom: 10px;
 }
 
+.name-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.name-group input {
+    flex: 1;
+}
+
 /* Input field styles */
 .container input, .container select {
     width: 100%;
@@ -104,17 +114,73 @@ select:invalid ~ .hint {
 
 #tshirtOrderTable th:nth-child(2),
 #tshirtOrderTable td:nth-child(2) {
-    width: 40%; /* Widest column for color dropdown */
+    width: 40%; /* Widest column for size dropdown */
 }
 
 #tshirtOrderTable th:nth-child(3),
 #tshirtOrderTable td:nth-child(3) {
-    width: 25%; 
+    width: 50%; 
 }
 
-#tshirtOrderTable th:nth-child(4),
-#tshirtOrderTable td:nth-child(4) {
-    width: 25%; 
+/* Spinner input styling */
+.qtySpinner {
+    width: 60px; /* Adjust width */
+    padding: 5px; /* Less padding for a compact look */
+    font-size: 16px;
+    text-align: center; /* Center the value */
+    border: 1px solid #ccc;
+    border-radius: 0; /* Set border radius to zero */
+    appearance: none; /* Remove default styling */
+    outline: none; /* Remove outline on focus */
+    appearance: textfield;
+}
+
+/* Remove spinner buttons in Chrome/Edge */
+.qtySpinner::-webkit-inner-spin-button,
+.qtySpinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Container for spinner buttons and input */
+.number-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Spinner buttons */
+.spinner {
+    width: 50px; /* Adjust the button width */
+    height: 40px; /* Adjust the button height */
+    background-color: #4CAF50; /* Same color as other buttons */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px; /* Slightly smaller font size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0; /* No extra padding */
+    border-radius: 0; /* Ensure no rounding */
+}
+
+.spinner:active {
+    background-color: #45a049;
+}
+
+.qtySpinner:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Add border-radius to the first and last buttons */
+.spinner:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.spinner:last-child {
+    border-radius: 0 5px 5px 0;
 }
 
 /* Button styling */
@@ -174,5 +240,8 @@ button#calculateFee:hover, button#submitForm:hover {
     .container {
         max-width: 100%;
         padding: 15px;
+    }
+    .qtySpinner {
+        font-size: 14px; /* Larger font size for better touch interaction */
     }
 }

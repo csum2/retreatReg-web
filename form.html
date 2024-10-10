@@ -18,36 +18,48 @@
         
         <input type="tel" id="phone" placeholder="Contact Mobile 123-456-7890" required>
         <span class="hint" id="hintPhone1">Contact mobile number is required</span>
-        <label for="numFamilies">Number of families in the unit:</label>
-        <select id="numFamilies">
+        <p></p>
+        <label for="numHouseHolds">Number of households in the unit:</label>
+        <select id="numHouseHolds">
             <option value="1" selected>1</option>
             <option value="2">2</option>
         </select>
 
         <h3>Room 1</h3>
-        <input type="text" id="name1" placeholder="Name 1" required>
-        <span class="hint" id="hintName1">Name 1 is required</span>
-        <input type="text" id="name2" placeholder="Name 2">
+        <div class="name-group">
+            <input type="text" id="firstName1" placeholder="First Name" required>
+            <input type="text" id="lastName1" placeholder="Last Name" required>
+        </div>
+        <span class="hint" id="hintName1">First and Last Name are required</span>
+        <div class="name-group">
+            <input type="text" id="firstName2" placeholder="First Name" required>
+            <input type="text" id="lastName2" placeholder="Last Name" required>
+        </div>
         <span class="hint" id="hintName2" style="display: none;">Optional</span>
 
         <h3>Room 2</h3>
-        <input type="text" id="name3" placeholder="Name 3">
-        <span class="hint" id="hintName3" style="display: none;">Name 3 is required if 2 families</span>
-        <input type="text" id="name4" placeholder="Name 4">
+        <div class="name-group">
+            <input type="text" id="firstName3" placeholder="First Name" required>
+            <input type="text" id="lastName3" placeholder="Last Name" required>
+        </div>
+        <span class="hint" id="hintName3" style="display: none;">First and Last Name are required if 2 households</span>
+        <div class="name-group">
+            <input type="text" id="firstName4" placeholder="First Name" required>
+            <input type="text" id="lastName4" placeholder="Last Name" required>
+        </div>
         <span class="hint" id="hintName4" style="display: none;">Optional</span>
 
         <hr class="divider">
 
         <label>T-shirt Order details:</label>
         <p id="eventInfo2">
-            The price for each T-shirt is $20.  If you wish to place an order, select the colour, size, and quantity.
+            Each person has 1 free T-shirt and you can select the size below.  The price for each extra T-shirt is $20 if you wish to place more orders.
         </p>
         
         <table id="tshirtOrderTable">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Color</th>
                     <th>Size</th>
                     <th>Qty</th>
                 </tr>
@@ -55,14 +67,6 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>
-                        <select id="colorSelect1" class="colorSelect">
-                            <option value="Black" selected>Black</option>
-                            <option value="White">White</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Red">Red</option>
-                        </select>
-                    </td>
                     <td>
                         <select id="sizeSelect1" class="sizeSelect">
                             <option value="S" selected>S</option>
@@ -72,25 +76,16 @@
                         </select>
                     </td>
                     <td>
-                        <select id="qtySelect1" class="qtySelect">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <div class="number-input">
+                            <button class="spinner" onclick="adjustQty(-1, 'qtySpinner1')">-</button>
+                            <input type="number" id="qtySpinner1" value="1" class="qtySpinner" min="0" max="99">
+                            <button class="spinner" onclick="adjustQty(1, 'qtySpinner1')">+</button>
+                        </div>
+                    </td>
                     </td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>
-                        <select id="colorSelect2" class="colorSelect">
-                            <option value="Black" selected>Black</option>
-                            <option value="White">White</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Red">Red</option>
-                        </select>
-                    </td>
                     <td>
                         <select id="sizeSelect2" class="sizeSelect">
                             <option value="S" selected>S</option>
@@ -100,25 +95,15 @@
                         </select>
                     </td>
                     <td>
-                        <select id="qtySelect2" class="qtySelect">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <div class="number-input">
+                            <button class="spinner" onclick="adjustQty(-1, 'qtySpinner2')">-</button>
+                            <input type="number" id="qtySpinner2" value="1" class="qtySpinner" min="0" max="99">
+                            <button class="spinner" onclick="adjustQty(1, 'qtySpinner2')">+</button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>
-                        <select id="colorSelect3" class="colorSelect">
-                            <option value="Black" selected>Black</option>
-                            <option value="White">White</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Red">Red</option>
-                        </select>
-                    </td>
                     <td>
                         <select id="sizeSelect3" class="sizeSelect">
                             <option value="S" selected>S</option>
@@ -128,25 +113,15 @@
                         </select>
                     </td>
                     <td>
-                        <select id="qtySelect3" class="qtySelect">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <div class="number-input">
+                            <button class="spinner" onclick="adjustQty(-1, 'qtySpinner3')">-</button>
+                            <input type="number" id="qtySpinner3" value="1" class="qtySpinner" min="0" max="99">
+                            <button class="spinner" onclick="adjustQty(1, 'qtySpinner3')">+</button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>4</td>
-                    <td>
-                        <select id="colorSelect4" class="colorSelect">
-                            <option value="Black" selected>Black</option>
-                            <option value="White">White</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Red">Red</option>
-                        </select>
-                    </td>
                     <td>
                         <select id="sizeSelect4" class="sizeSelect">
                             <option value="S" selected>S</option>
@@ -156,13 +131,11 @@
                         </select>
                     </td>
                     <td>
-                        <select id="qtySelect4" class="qtySelect">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <div class="number-input">
+                            <button class="spinner" onclick="adjustQty(-1, 'qtySpinner4')">-</button>
+                            <input type="number" id="qtySpinner4" value="1" class="qtySpinner" min="0" max="99">
+                            <button class="spinner" onclick="adjustQty(1, 'qtySpinner4')">+</button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -183,8 +156,8 @@
     <script>
         // Determine the environment
         let baseUrl;
-        baseUrl = 'https://retreatreg-rest.fly.dev';
-/*
+        //baseUrl = 'https://retreatreg-rest.fly.dev';
+
         if (window.location.hostname === 'localhost') {
             baseUrl = 'http://localhost:3000'; // Local development
         } else if (window.location.hostname === '192.168.1.117') {
@@ -192,7 +165,7 @@
         } else {
             baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
         }
-*/
+
         const saveOrUpdateUrl = `${baseUrl}/saveOrUpdate`;
         var userDataEmail;
         var userDataRegDate;
@@ -244,6 +217,14 @@
                 selectElement.value = value;
             }
         }
+
+        function adjustQty(amount, spinnerId) {
+            const spinner = document.getElementById(spinnerId);
+            let currentValue = parseInt(spinner.value) || 0;
+            currentValue = Math.min(Math.max(currentValue + amount, 0), 99); // Keep within 0-99
+            spinner.value = currentValue;
+        }
+
         // Load existing user data from localStorage
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -253,41 +234,33 @@
                 userDataEmail = userData.email;
                 document.getElementById('phone').value = userData.mobile || '';
 
-                const familySelect = document.getElementById('numFamilies');
-                setSelectedValue(familySelect, userData.numOfFam);
+                const householdSelect = document.getElementById('numHouseHolds');
+                setSelectedValue(householdSelect, userData.numOfHH);
 
-                document.getElementById('name1').value = userData.names[0] || '';
-                document.getElementById('name2').value = userData.names[1] || '';
-                document.getElementById('name3').value = userData.names[2] || '';
-                document.getElementById('name4').value = userData.names[3] || '';
+                document.getElementById('firstName1').value = userData.names[0].firstName || '';
+                document.getElementById('lastName1').value  = userData.names[0].lastName  || '';
+                document.getElementById('firstName2').value = userData.names[1].firstName || '';
+                document.getElementById('lastName2').value  = userData.names[1].lastName  || '';
+                document.getElementById('firstName3').value = userData.names[2].firstName || '';
+                document.getElementById('lastName3').value  = userData.names[2].lastName  || '';
+                document.getElementById('firstName4').value = userData.names[3].firstName || '';
+                document.getElementById('lastName4').value  = userData.names[3].lastName  || '';
 
-                const colorSelect1 = document.getElementById('colorSelect1');
-                setSelectedValue(colorSelect1, userData.tshirts[0].color); 
                 const sizeSelect1 = document.getElementById('sizeSelect1');
                 setSelectedValue(sizeSelect1, userData.tshirts[0].size); 
-                const qtySelect1 = document.getElementById('qtySelect1');
-                setSelectedValue(qtySelect1, userData.tshirts[0].qty); 
+                document.getElementById('qtySpinner1').value = userData.tshirts[0].qty;
 
-                const colorSelect2 = document.getElementById('colorSelect2');
-                setSelectedValue(colorSelect2, userData.tshirts[1].color); 
                 const sizeSelect2 = document.getElementById('sizeSelect2');
                 setSelectedValue(sizeSelect2, userData.tshirts[1].size); 
-                const qtySelect2 = document.getElementById('qtySelect2');
-                setSelectedValue(qtySelect2, userData.tshirts[1].qty); 
+                document.getElementById('qtySpinner2').value = userData.tshirts[1].qty;
 
-                const colorSelect3 = document.getElementById('colorSelect3');
-                setSelectedValue(colorSelect3, userData.tshirts[2].color); 
                 const sizeSelect3 = document.getElementById('sizeSelect3');
                 setSelectedValue(sizeSelect3, userData.tshirts[2].size); 
-                const qtySelect3 = document.getElementById('qtySelect3');
-                setSelectedValue(qtySelect3, userData.tshirts[2].qty); 
+                document.getElementById('qtySpinner3').value = userData.tshirts[2].qty;
 
-                const colorSelect4 = document.getElementById('colorSelect4');
-                setSelectedValue(colorSelect4, userData.tshirts[3].color); 
                 const sizeSelect4 = document.getElementById('sizeSelect4');
                 setSelectedValue(sizeSelect4, userData.tshirts[3].size); 
-                const qtySelect4 = document.getElementById('qtySelect4');
-                setSelectedValue(qtySelect4, userData.tshirts[3].qty); 
+                document.getElementById('qtySpinner4').value = userData.tshirts[3].qty;
 
                 document.getElementById('feeAmount').textContent =
                     (userData.totalFee !== undefined && userData.totalFee !== null) ? parseFloat(userData.totalFee).toFixed(2) : '0.00';
@@ -314,29 +287,41 @@
         };
         
         const phoneInput = document.getElementById('phone');
-        const numFamiliesSelect = document.getElementById('numFamilies');
-        const nameInputs = [
-            document.getElementById('name1'), 
-            document.getElementById('name2'), 
-            document.getElementById('name3'), 
-            document.getElementById('name4')
+        const numHouseHoldsSelect = document.getElementById('numHouseHolds');
+        const firstNameInputs = [
+            document.getElementById('firstName1'), 
+            document.getElementById('firstName2'), 
+            document.getElementById('firstName3'), 
+            document.getElementById('firstName4')
+        ];
+        const lastNameInputs = [
+            document.getElementById('lastName1'), 
+            document.getElementById('lastName2'), 
+            document.getElementById('lastName3'), 
+            document.getElementById('lastName4')
         ];
         const submitButton = document.getElementById('submitForm');
-        const qtySelects = document.querySelectorAll('.qtySelect');
+        const qtySpinners = document.querySelectorAll('.qtySpinner');
 
         document.addEventListener('DOMContentLoaded', function() {
             function updateNameFields() {
-                const numFamilies = parseInt(numFamiliesSelect.value);
-                nameInputs[0].required = true; // Name 1 is always required
-                nameInputs[1].required = false; // Name 2 is not required
-                nameInputs[2].required = (numFamilies === 2); // Name 3 is required only if 2 families
-                nameInputs[3].required = false; // Name 4 is not required
+                const numHouseHolds = parseInt(numHouseHoldsSelect.value);
+                firstNameInputs[0].required = true; // Name 1 is always required
+                lastNameInputs[0].required  = true; // Name 1 is always required
+                firstNameInputs[1].required = false; // Name 2 is not required
+                lastNameInputs[1].required  = false; // Name 2 is not required
+                firstNameInputs[2].required = (numHouseHolds === 2); // Name 3 is required only if 2 households
+                lastNameInputs[2].required  = (numHouseHolds === 2); // Name 3 is required only if 2 households
+                firstNameInputs[3].required = false; // Name 4 is not required
+                lastNameInputs[3].required  = false; // Name 4 is not required
                 
-                // Update hints based on the number of families
-                document.getElementById('hintName3').style.display = (numFamilies === 2 && nameInputs[2].value.trim() === "") ? 'inline' : 'none'; // Show Name 3 hint if 2 families
+                // Update hints based on the number of households
+                // Show Name 3 hint if 2 households
+                document.getElementById('hintName3').style.display = 
+                    (numHouseHolds === 2 && (firstNameInputs[2].value.trim() === "" || lastNameInputs[2].value.trim() === "")) ? 'inline' : 'none';
             }
 
-            numFamiliesSelect.addEventListener('change', updateNameFields);
+            numHouseHoldsSelect.addEventListener('change', updateNameFields);
 
             // Function to validate phone number format
             function validatePhone() {
@@ -355,20 +340,26 @@
             // Function to check if all required fields are filled
             function checkRequiredFields() {
                 const isPhoneValid = validatePhone();
-                const isName1Valid = nameInputs[0].checkValidity();
-                const isName3Valid = numFamiliesSelect.value == '2' ? nameInputs[2].checkValidity() : true; // Only check Name 3 if 2 families
-                return isPhoneValid && isName1Valid && isName3Valid;
+                const isName1Valid = firstNameInputs[0].checkValidity() && lastNameInputs[0].checkValidity();
+                const isName3Valid = numHouseHoldsSelect.value == '2' ? (firstNameInputs[2].checkValidity() && lastNameInputs[0].checkValidity()) : true; // Only check Name 3 if 2 households
+                
+                // Check if T-shirt count is greater than or equal to the number of persons
+                const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
+                const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
+                const isTshirtQtyValid = tShirtCount >= personCount;
+
+                return isPhoneValid && isName1Valid && isName3Valid && isTshirtQtyValid;
             }
 
             // Disable submit button initially
             submitButton.disabled = true;
 
-            // Enable/disable submit button based input fields
-            nameInputs.forEach(input => {
+            // Enable/disable hints based input fields
+            firstNameInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     submitButton.disabled = true;
-                    if (input === nameInputs[2]) {
-                        if (nameInputs[2].value.trim() === "" && parseInt(numFamiliesSelect.value) === 2) {
+                    if (input === firstNameInputs[2]) {
+                        if ((firstNameInputs[2].value.trim() === "" || lastNameInputs[2].value.trim() === "") && parseInt(numHouseHoldsSelect.value) === 2) {
                             document.getElementById('hintName3').style.display = "inline"
                         } else {
                             document.getElementById('hintName3').style.display = "none"
@@ -378,33 +369,57 @@
             });
 
             // Enable/disable submit button based on T-shirt qty changed
-            qtySelects.forEach(change => {
+            qtySpinners.forEach(change => {
                 change.addEventListener('change', function() {
                     submitButton.disabled = true;
                 });
             });
 
+            // Function to select the spinner content on focus
+            function selectSpinnerContent(event) {
+                event.target.select(); // Select the input content
+            }
+
+            // Spinner fields allow only numeric inputs and select the content if got focus
+            qtySpinners.forEach(spinner => {
+                spinner.addEventListener('input', function (e) {
+                    // If the input is not a number, set it to 0
+                    if (isNaN(this.value) || this.value === '') {
+                        this.value = 0;
+                    }
+                });
+                spinner.addEventListener('focus', selectSpinnerContent);
+            });
+
             // Calculate Total Fee
             function calculateTotalFee() {
-                let total = 999; // Fixed fee for a residence
+                const baseFee = 999;        // Fixed fee for a residence
+                const mealPlanFee = 200;    // Meal plan fee for each person
+                const tShirtPrice = 20;     // T-shirt unit price
+
+                let total = baseFee; 
                 let tShirtCount = 0;
+                let numberOfPeople = 0;     // To count the number of people
 
                 // Add meal plan fee of $200 for each person
-                nameInputs.forEach(input => {
+                firstNameInputs.forEach(input => {
                     if (input.value.trim() !== '') { // Check for non-blank input
-                        total += 200;
+                        total += mealPlanFee;
+                        numberOfPeople++; // Increment number of people for each non-blank input
                     }
                 });
 
-                // Add T-shirt order qty amount $20 / pcs
-                qtySelects.forEach(select => {
-                    tShirtCount += parseInt(select.value);
+                // Add T-shirt order qty amount $20 / pcs, subtract free T-shirts for each person
+                qtySpinners.forEach(spinner => {
+                    tShirtCount += parseInt(spinner.value) || 0; // Ensure the spinner value is a number
                 });
-                total += tShirtCount * 20; // Add T-shirt costs
+
+                // Calculate T-shirt cost only for extra shirts beyond the free ones
+                total += (tShirtCount - numberOfPeople > 0 ? (tShirtCount - numberOfPeople) * 20 : 0); // Only charge for extra T-shirts
 
                 document.getElementById('feeAmount').textContent = `${total.toFixed(2)}`;
-                //submitButton.disabled = total === 999 || !checkRequiredFields();
-                submitButton.disabled = total === 999
+                // Disable submit button if no additional payment is required
+                submitButton.disabled = (total === baseFee); 
             }
 
             document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
@@ -415,17 +430,25 @@
                 document.getElementById('phone').value = '';
 
                 // Clear name inputs
-                nameInputs.forEach(input => {
+                firstNameInputs.forEach(input => {
+                    input.value = ''; // Clear the input value
+                });
+                lastNameInputs.forEach(input => {
                     input.value = ''; // Clear the input value
                 });
 
-                // Reset family count to default
-                numFamiliesSelect.selectedIndex = 0; // Reset to the first option (1 family)
+                // Reset household count to default
+                numHouseHoldsSelect.selectedIndex = 0; // Reset to the first option (1 household)
 
                 // Reset select elements
-                document.querySelectorAll(' .colorSelect, .sizeSelect, .qtySelect').
+                document.querySelectorAll(' .sizeSelect').
                     forEach(select => {
                     select.selectedIndex = 0; // Reset to the first option
+                });
+
+                // Reset the spinners
+                qtySpinners.forEach(spinner => {
+                    spinner.value = 0;
                 });
 
                 // Reset total fee
@@ -434,7 +457,7 @@
                 // Disable the submit button
                 submitButton.disabled = true;
 
-                // Re-initialize the name fields based on the reset number of families
+                // Re-initialize the name fields based on the reset number of households
                 updateNameFields();
             });
 
@@ -442,23 +465,26 @@
             function saveToBackend() {
                 // Gather data and build the JSON object
                 const email = userDataEmail;
-                const numOfFam = document.getElementById("numFamilies").value;
-                const names = [
-                document.getElementById("name1").value,
-                document.getElementById("name2").value,
-                document.getElementById("name3").value,
-                document.getElementById("name4").value
-                ];
+                const numOfHH = document.getElementById("numHouseHolds").value;
+
+                //Gather first names and last names
+                const names = [];
+                for (let i = 1; i <= 4; i++) {
+                    names.push({
+                        firstName: document.getElementById("firstName" + i).value,
+                        lastName: document.getElementById("lastName" + i).value,
+                    });
+                }
+
                 const mobile = document.getElementById("phone").value;
 
                 // Gather T-shirt orders
                 const tshirts = [];
                 for (let i = 1; i <= 4; i++) {
-                tshirts.push({
-                    color: document.getElementById("colorSelect" + i).value,
-                    size: document.getElementById("sizeSelect" + i).value,
-                    qty: document.getElementById("qtySelect" + i).value
-                });
+                    tshirts.push({
+                        size: document.getElementById("sizeSelect" + i).value,
+                        qty: document.getElementById("qtySpinner" + i).value
+                    });
                 }
 
                 const totalFee = document.getElementById("feeAmount").textContent;
@@ -466,7 +492,7 @@
                 // Build the JSON object
                 const formData = {
                     email: email,
-                    numOfFam: parseInt(numOfFam),
+                    numOfHH: parseInt(numOfHH),
                     names: names,
                     mobile: mobile,
                     tshirts: tshirts,
@@ -513,8 +539,14 @@
                 if (!checkRequiredFields()) {
                     let missingFields = [];
                     if (!validatePhone()) missingFields.push('Contact mobile');
-                    if (!nameInputs[0].checkValidity()) missingFields.push('Name 1');
-                    if (numFamiliesSelect.value === '2' && !nameInputs[2].checkValidity()) missingFields.push('Name 3');
+                    if (!firstNameInputs[0].checkValidity()) missingFields.push('First Name 1');
+                    if (!lastNameInputs[0].checkValidity()) missingFields.push('Last Name 1');
+                    if (numHouseHoldsSelect.value === '2' && !firstNameInputs[2].checkValidity()) missingFields.push('First Name 3');
+                    if (numHouseHoldsSelect.value === '2' && !lastNameInputs[2].checkValidity()) missingFields.push('Last Name 3');
+
+                    const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
+                    const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
+                    if (!(tShirtCount >= personCount)) missingFields.push('T-shirt qty not enough for all the people');
 
                     Swal.fire({
                         icon: 'error',
