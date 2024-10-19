@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retreat Registration Form</title>
-    <link rel="stylesheet" href="/style.css"> <!-- Link to external CSS -->
+    <link rel="stylesheet" href="style.css"> <!-- Link to external CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -159,9 +159,9 @@
         //baseUrl = 'https://retreatreg-rest.fly.dev';
 
         if (window.location.hostname === 'localhost') {
-            baseUrl = 'http://localhost:3000'; // Local development
+            baseUrl = 'https://localhost:3000'; // Local development
         } else if (window.location.hostname === '192.168.1.117') {
-            baseUrl = 'http://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
+            baseUrl = 'https://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
         } else {
             baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
         }
