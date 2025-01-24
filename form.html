@@ -83,7 +83,7 @@
                     <td>
                         <div class="number-input">
                             <button class="spinner" onclick="adjustQty(-1, 'qtySpinner1')">-</button>
-                            <input type="number" id="qtySpinner1" value="1" class="qtySpinner" min="0" max="99">
+                            <input type="number" id="qtySpinner1" value="1" class="qtySpinner" min="0" max="4">
                             <button class="spinner" onclick="adjustQty(1, 'qtySpinner1')">+</button>
                         </div>
                     </td>
@@ -552,7 +552,7 @@
 
                     const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
                     const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
-                    if (!(tShirtCount >= personCount)) missingFields.push('T-shirt qty not enough for all the people');
+                    if (!(tShirtCount != personCount)) missingFields.push('Number of T-shirts and people not matching');
 
                     Swal.fire({
                         icon: 'error',
