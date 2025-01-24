@@ -7,8 +7,13 @@
     <link rel="stylesheet" href="style.css"> <!-- Link to external CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/4.0.0/spin.min.js"></script>
 </head>
 <body>
+    <!-- Fullscreen loading indicator -->
+    <div id="loading-indicator" style="display: none;">
+        <div class="loading-spinner"></div>
+    </div>
     <button class="logout-btn" id="logoutBtn" style="width: auto;">&#10006;</button>
     <div class="container">
         <h2>Cornerstone Fellowship<br>Retreat Registration Form</h2>
@@ -156,15 +161,7 @@
     <script>
         // Determine the environment
         let baseUrl;
-        //baseUrl = 'https://retreatreg-rest.fly.dev';
-
-        if (window.location.hostname === 'localhost') {
-            baseUrl = 'https://localhost:3000'; // Local development
-        } else if (window.location.hostname === '192.168.1.117') {
-            baseUrl = 'https://192.168.1.117:3000'; // Intranet testing (replace with actual URL)
-        } else {
-            baseUrl = 'https://your-production-url'; // Production URL (replace with actual URL)
-        }
+        baseUrl = 'https://retreatreg-rest.fly.dev';
 
         const saveOrUpdateUrl = `${baseUrl}/saveOrUpdate`;
         var userDataEmail;
@@ -393,33 +390,33 @@
 
             // Calculate Total Fee
             function calculateTotalFee() {
-                const baseFee = 999;        // Fixed fee for a residence
-                const mealPlanFee = 200;    // Meal plan fee for each person
-                const tShirtPrice = 20;     // T-shirt unit price
+                const onePersonFee = 170;
+                const twoPersonFee = 125;
+                const threePersonFee = 110;
+                const fourPersonFee = 102;
 
-                let total = baseFee; 
-                let tShirtCount = 0;
                 let numberOfPeople = 0;     // To count the number of people
+                let feeToPay = 0;           // total fee to be paid
 
-                // Add meal plan fee of $200 for each person
                 firstNameInputs.forEach(input => {
                     if (input.value.trim() !== '') { // Check for non-blank input
-                        total += mealPlanFee;
                         numberOfPeople++; // Increment number of people for each non-blank input
                     }
                 });
 
-                // Add T-shirt order qty amount $20 / pcs, subtract free T-shirts for each person
-                qtySpinners.forEach(spinner => {
-                    tShirtCount += parseInt(spinner.value) || 0; // Ensure the spinner value is a number
-                });
+                if (numberOfPeople == 1) {
+                    feeToPay = onePersonFee;
+                } else if (numberOfPeople == 2) {
+                    feeToPay = twoPersonFee * 2;
+                } else if (numberOfPeople == 3) {
+                    feeToPay = threePersonFee * 3;
+                } else if (numberOfPeople == 4) {
+                    feeToPay = fourPersonFee * 4;
+                }
 
-                // Calculate T-shirt cost only for extra shirts beyond the free ones
-                total += (tShirtCount - numberOfPeople > 0 ? (tShirtCount - numberOfPeople) * 20 : 0); // Only charge for extra T-shirts
-
-                document.getElementById('feeAmount').textContent = `${total.toFixed(2)}`;
+                document.getElementById('feeAmount').textContent = `${feeToPay.toFixed(2)}`;
                 // Disable submit button if no additional payment is required
-                submitButton.disabled = (total === baseFee); 
+                submitButton.disabled = (feeToPay === 0); 
             }
 
             document.getElementById('calculateFee').addEventListener('click', calculateTotalFee);
@@ -499,6 +496,11 @@
                     totalFee: totalFee
                 };
                 console.log('Form data json:', JSON.stringify(formData));
+
+                // Show loading indicator
+                const loadingIndicator = document.getElementById('loading-indicator');
+                loadingIndicator.style.display = 'flex';
+
                 // Send the POST request to /saveOrUpdate
                 fetch(saveOrUpdateUrl, {
                     method: 'POST',
@@ -530,6 +532,10 @@
                         text: 'There was an error submitting the form. Please retry',
                         confirmButtonText: 'Proceed',
                     });
+                })
+                .finally(() => {
+                    // Hide loading indicator
+                    loadingIndicator.style.display = 'none';
                 });
             }
 

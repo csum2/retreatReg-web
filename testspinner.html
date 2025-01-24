@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinner Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/spin.js@4.0.0/spin.min.js"></script>
+    <style>
+        #spinnerTarget {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <button id="submitBtn">Submit</button>
+    <div id="spinnerTarget" style="display:none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('submitBtn').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                // Show the spinner
+                const spinnerTarget = document.getElementById('spinnerTarget');
+                spinnerTarget.style.display = 'block'; // Show the spinner target
+
+                // Initialize and start the spinner
+                const spinner = new Spinner().spin(spinnerTarget);
+                
+                // Simulate a delay (for demonstration purposes)
+                setTimeout(function() {
+                    // Hide the spinner
+                    spinner.stop();
+                    spinnerTarget.style.display = 'none'; // Hide the spinner target
+                }, 3000); // Replace with your form submission logic
+            });
+        });
+    </script>
+</body>
+</html>
