@@ -83,7 +83,7 @@
                     <td>
                         <div class="number-input">
                             <button class="spinner" onclick="adjustQty(-1, 'qtySpinner1')">-</button>
-                            <input type="number" id="qtySpinner1" value="1" class="qtySpinner" min="0" max="4">
+                            <input type="number" id="qtySpinner1" value="1" class="qtySpinner" min="0" max="4" oninput="this.value = Math.min(Math.max(this.value, 0), 4);">
                             <button class="spinner" onclick="adjustQty(1, 'qtySpinner1')">+</button>
                         </div>
                     </td>
@@ -102,7 +102,7 @@
                     <td>
                         <div class="number-input">
                             <button class="spinner" onclick="adjustQty(-1, 'qtySpinner2')">-</button>
-                            <input type="number" id="qtySpinner2" value="0" class="qtySpinner" min="0" max="99">
+                            <input type="number" id="qtySpinner2" value="0" class="qtySpinner" min="0" max="4" oninput="this.value = Math.min(Math.max(this.value, 0), 4);">
                             <button class="spinner" onclick="adjustQty(1, 'qtySpinner2')">+</button>
                         </div>
                     </td>
@@ -120,7 +120,7 @@
                     <td>
                         <div class="number-input">
                             <button class="spinner" onclick="adjustQty(-1, 'qtySpinner3')">-</button>
-                            <input type="number" id="qtySpinner3" value="0" class="qtySpinner" min="0" max="99">
+                            <input type="number" id="qtySpinner3" value="0" class="qtySpinner" min="0" max="4" oninput="this.value = Math.min(Math.max(this.value, 0), 4);">
                             <button class="spinner" onclick="adjustQty(1, 'qtySpinner3')">+</button>
                         </div>
                     </td>
@@ -138,7 +138,7 @@
                     <td>
                         <div class="number-input">
                             <button class="spinner" onclick="adjustQty(-1, 'qtySpinner4')">-</button>
-                            <input type="number" id="qtySpinner4" value="0" class="qtySpinner" min="0" max="99">
+                            <input type="number" id="qtySpinner4" value="0" class="qtySpinner" min="0" max="4" oninput="this.value = Math.min(Math.max(this.value, 0), 4);">
                             <button class="spinner" onclick="adjustQty(1, 'qtySpinner4')">+</button>
                         </div>
                     </td>
@@ -218,7 +218,7 @@
         function adjustQty(amount, spinnerId) {
             const spinner = document.getElementById(spinnerId);
             let currentValue = parseInt(spinner.value) || 0;
-            currentValue = Math.min(Math.max(currentValue + amount, 0), 99); // Keep within 0-99
+            currentValue = Math.min(Math.max(currentValue + amount, 0), 4); // Keep within 0-4
             spinner.value = currentValue;
         }
 
@@ -340,10 +340,10 @@
                 const isName1Valid = firstNameInputs[0].checkValidity() && lastNameInputs[0].checkValidity();
                 const isName3Valid = numHouseHoldsSelect.value == '2' ? (firstNameInputs[2].checkValidity() && lastNameInputs[0].checkValidity()) : true; // Only check Name 3 if 2 households
                 
-                // Check if T-shirt count is greater than or equal to the number of persons
+                // Check if T-shirt count is equal to the number of persons
                 const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
                 const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
-                const isTshirtQtyValid = tShirtCount >= personCount;
+                const isTshirtQtyValid = (tShirtCount == personCount);
 
                 return isPhoneValid && isName1Valid && isName3Valid && isTshirtQtyValid;
             }
@@ -552,7 +552,7 @@
 
                     const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
                     const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
-                    if (!(tShirtCount != personCount)) missingFields.push('Number of T-shirts and people not matching');
+                    if (tShirtCount != personCount) missingFields.push('Number of T-shirts and people not matching');
 
                     Swal.fire({
                         icon: 'error',
