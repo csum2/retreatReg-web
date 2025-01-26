@@ -21,16 +21,10 @@
             The contact information of the person who completes the registration form will become the contact of that suite. All future communication will be under this registrant’s name, phone number and email. For sharing one suite, all registrants’ information has to be provided in the same registration form.
         </p>
         
-        <input type="tel" id="phone" placeholder="Contact Mobile 123-456-7890" required>
+        <h3>Contact</h3>
+        <input type="tel" id="phone" placeholder="Contact Mobile in the format 123-456-7890" required>
         <span class="hint" id="hintPhone1">Contact mobile number is required</span>
-        <p></p>
-        <label for="numHouseHolds">Number of households in the unit:</label>
-        <select id="numHouseHolds">
-            <option value="1" selected>1</option>
-            <option value="2">2</option>
-        </select>
-
-        <h3>Room 1</h3>
+        <h3>Registrants</h3>
         <div class="name-group">
             <input type="text" id="firstName1" placeholder="First Name" required>
             <input type="text" id="lastName1" placeholder="Last Name" required>
@@ -42,12 +36,11 @@
         </div>
         <span class="hint" id="hintName2" style="display: none;">Optional</span>
 
-        <h3>Room 2</h3>
         <div class="name-group">
             <input type="text" id="firstName3" placeholder="First Name" required>
             <input type="text" id="lastName3" placeholder="Last Name" required>
         </div>
-        <span class="hint" id="hintName3" style="display: none;">First and Last Name are required if 2 households</span>
+        <span class="hint" id="hintName3" style="display: none;">Optional</span>
         <div class="name-group">
             <input type="text" id="firstName4" placeholder="First Name" required>
             <input type="text" id="lastName4" placeholder="Last Name" required>
@@ -146,7 +139,7 @@
             </tbody>
         </table>
         <p id="eventInfo3">
-            Please click the calculate button to see the total fees before you can submit the registration.
+            Please click the calculate button to see the total fees before you can submit the registration.  For one person per Suite, the retreat fee is $170/person.  For two people per Suite, the fee is $125/person.  For three people per Suite, the fee is $110/person.  For four people per Suite, the fee becomes $102/person.
         </p>
 
         <p style="display: flex; justify-content: space-between; align-items: center;">
@@ -231,8 +224,8 @@
                 userDataEmail = userData.email;
                 document.getElementById('phone').value = userData.mobile || '';
 
-                const householdSelect = document.getElementById('numHouseHolds');
-                setSelectedValue(householdSelect, userData.numOfHH);
+                //const householdSelect = document.getElementById('numHouseHolds');
+                //setSelectedValue(householdSelect, userData.numOfHH);
 
                 document.getElementById('firstName1').value = userData.names[0].firstName || '';
                 document.getElementById('lastName1').value  = userData.names[0].lastName  || '';
@@ -284,7 +277,7 @@
         };
         
         const phoneInput = document.getElementById('phone');
-        const numHouseHoldsSelect = document.getElementById('numHouseHolds');
+        //const numHouseHoldsSelect = document.getElementById('numHouseHolds');
         const firstNameInputs = [
             document.getElementById('firstName1'), 
             document.getElementById('firstName2'), 
@@ -301,6 +294,7 @@
         const qtySpinners = document.querySelectorAll('.qtySpinner');
 
         document.addEventListener('DOMContentLoaded', function() {
+            /*
             function updateNameFields() {
                 const numHouseHolds = parseInt(numHouseHoldsSelect.value);
                 firstNameInputs[0].required = true; // Name 1 is always required
@@ -317,8 +311,8 @@
                 document.getElementById('hintName3').style.display = 
                     (numHouseHolds === 2 && (firstNameInputs[2].value.trim() === "" || lastNameInputs[2].value.trim() === "")) ? 'inline' : 'none';
             }
-
-            numHouseHoldsSelect.addEventListener('change', updateNameFields);
+            */
+            //numHouseHoldsSelect.addEventListener('change', updateNameFields);
 
             // Function to validate phone number format
             function validatePhone() {
@@ -338,20 +332,22 @@
             function checkRequiredFields() {
                 const isPhoneValid = validatePhone();
                 const isName1Valid = firstNameInputs[0].checkValidity() && lastNameInputs[0].checkValidity();
-                const isName3Valid = numHouseHoldsSelect.value == '2' ? (firstNameInputs[2].checkValidity() && lastNameInputs[0].checkValidity()) : true; // Only check Name 3 if 2 households
+                //const isName3Valid = numHouseHoldsSelect.value == '2' ? (firstNameInputs[2].checkValidity() && lastNameInputs[0].checkValidity()) : true; // Only check Name 3 if 2 households
                 
                 // Check if T-shirt count is equal to the number of persons
                 const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
                 const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
                 const isTshirtQtyValid = (tShirtCount == personCount);
 
-                return isPhoneValid && isName1Valid && isName3Valid && isTshirtQtyValid;
+                //return isPhoneValid && isName1Valid && isName3Valid && isTshirtQtyValid;
+                return isPhoneValid && isName1Valid && isTshirtQtyValid;
             }
 
             // Disable submit button initially
             submitButton.disabled = true;
 
             // Enable/disable hints based input fields
+            /*
             firstNameInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     submitButton.disabled = true;
@@ -364,6 +360,7 @@
                     }
                 });
             });
+            */
 
             // Enable/disable submit button based on T-shirt qty changed
             qtySpinners.forEach(change => {
@@ -435,7 +432,7 @@
                 });
 
                 // Reset household count to default
-                numHouseHoldsSelect.selectedIndex = 0; // Reset to the first option (1 household)
+                //numHouseHoldsSelect.selectedIndex = 0; // Reset to the first option (1 household)
 
                 // Reset select elements
                 document.querySelectorAll(' .sizeSelect').
@@ -455,14 +452,14 @@
                 submitButton.disabled = true;
 
                 // Re-initialize the name fields based on the reset number of households
-                updateNameFields();
+                //updateNameFields();
             });
 
             // Post the form inputs to the backend
             function saveToBackend() {
                 // Gather data and build the JSON object
                 const email = userDataEmail;
-                const numOfHH = document.getElementById("numHouseHolds").value;
+                //const numOfHH = document.getElementById("numHouseHolds").value;
 
                 //Gather first names and last names
                 const names = [];
@@ -489,7 +486,7 @@
                 // Build the JSON object
                 const formData = {
                     email: email,
-                    numOfHH: parseInt(numOfHH),
+                    //numOfHH: parseInt(numOfHH),
                     names: names,
                     mobile: mobile,
                     tshirts: tshirts,
@@ -547,8 +544,8 @@
                     if (!validatePhone()) missingFields.push('Contact mobile');
                     if (!firstNameInputs[0].checkValidity()) missingFields.push('First Name 1');
                     if (!lastNameInputs[0].checkValidity()) missingFields.push('Last Name 1');
-                    if (numHouseHoldsSelect.value === '2' && !firstNameInputs[2].checkValidity()) missingFields.push('First Name 3');
-                    if (numHouseHoldsSelect.value === '2' && !lastNameInputs[2].checkValidity()) missingFields.push('Last Name 3');
+                    //if (numHouseHoldsSelect.value === '2' && !firstNameInputs[2].checkValidity()) missingFields.push('First Name 3');
+                    //if (numHouseHoldsSelect.value === '2' && !lastNameInputs[2].checkValidity()) missingFields.push('Last Name 3');
 
                     const personCount = Array.from(firstNameInputs).filter(input => input.value.trim() !== '').length;
                     const tShirtCount = Array.from(qtySpinners).reduce((total, qty) => total + parseInt(qty.value, 10), 0);
@@ -572,7 +569,7 @@
             });
 
             // Initial setup
-            updateNameFields();
+            //updateNameFields();
         });
 
         document.addEventListener('keydown', function(e) {
